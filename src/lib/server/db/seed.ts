@@ -1,5 +1,14 @@
-import { db } from './index';
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import { materials, quizzes, questions } from './schema';
+
+if (!process.env.DATABASE_URL) {
+	throw new Error('DATABASE_URL is not set');
+}
+
+const sql = postgres(process.env.DATABASE_URL);
+const db = drizzle(sql);
 
 const materialSeed = [
 	{
@@ -95,9 +104,11 @@ async function run() {
 run()
 	.then(() => {
 		console.log('Seed completed');
+		void sql.end();
 		process.exit(0);
 	})
 	.catch((error) => {
 		console.error('Seed failed', error);
+		void sql.end();
 		process.exit(1);
 	});
