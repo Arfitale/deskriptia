@@ -6,6 +6,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import heroImage from '$lib/assets/hero.png';
 	import { ArrowRight } from '@lucide/svelte';
+	import Typewriter from '$lib/components/global/Typewriter.svelte';
 </script>
 
 <svelte:head>
@@ -40,7 +41,9 @@
 							aria-hidden="true"
 						></span>
 					</span>
-					<br />dengan Cara yang Menyenangkan
+					<br />dengan Cara yang
+					<br/>
+					<Typewriter texts={["Menyenangkan", "Efektif", "Interaktif", "Mudah Dipahami", "Bermakna"]} speed={100} deleteSpeed={50} delay={1500} />
 				</h1>
 
 				<p class="text-muted-foreground max-w-md text-base leading-relaxed">
