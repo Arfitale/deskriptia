@@ -7,13 +7,24 @@
 	import heroImage from '$lib/assets/hero.png';
 	import { ArrowRight } from '@lucide/svelte';
 	import Typewriter from '$lib/components/global/Typewriter.svelte';
+	import VantaBackground from '$lib/components/hero/VantaBackground.svelte';
+
+	let vantaColor = $state(0x9381ff);
+	let vantaBg = $state(0xffffff);
 </script>
 
 <svelte:head>
 	<title>Deskriptia | Belajar Teks Deskripsi</title>
 </svelte:head>
 
-<div class="bg-background flex min-h-svh flex-col">
+<VantaBackground
+	color={vantaColor}
+	backgroundColor={vantaBg}
+	maxDistance={15}
+	points={5}
+	spacing={25}
+  />
+<div class="bg-transparent flex min-h-svh flex-col">
 	<main class="relative flex flex-1 items-center overflow-hidden px-6 py-20 md:px-12">
 
 		<!-- Background blobs -->
