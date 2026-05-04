@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Card from '$lib/components/ui/Card.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
+	import { Card } from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -31,7 +31,7 @@ let resultColor = $state('text-[#6B7280]');
 	<a href={`/materi/${data.material.slug}`} class="mb-4 inline-block text-sm text-[#5D4FC4] hover:underline"
 		>← Back to Material</a
 	>
-	<Card>
+	<Card class="p-6">
 		<h1 class="mb-1 text-2xl font-bold text-[#1F2937]">{data.material.title} - Quiz</h1>
 		<p class="mb-6 text-sm text-[#6B7280]">Minimum passing score: {data.quiz.passScore}</p>
 

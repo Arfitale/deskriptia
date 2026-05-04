@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Card from '$lib/components/ui/Card.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
+	import { Card } from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -14,7 +14,7 @@
 		<h2 class="mb-4 text-xl font-semibold text-[#1F2937]">Materials</h2>
 		<div class="grid gap-4 md:grid-cols-2">
 			{#each data.materials as material}
-				<Card class="transition hover:-translate-y-0.5 hover:shadow-md">
+				<Card class="p-6 transition hover:-translate-y-0.5 hover:shadow-md">
 					<div class="mb-3 flex items-center justify-between">
 						<h3 class="font-semibold text-[#1F2937]">{material.title}</h3>
 						<span class={`text-xs ${material.isLocked ? 'text-[#FF6B6B]' : 'text-[#6EE7B7]'}`}>
@@ -42,12 +42,12 @@
 		<h2 class="mb-4 text-xl font-semibold text-[#1F2937]">Your Drafts</h2>
 		<div class="grid gap-4 md:grid-cols-2">
 			{#if data.drafts.length === 0}
-				<Card>
+				<Card class="p-6">
 					<p class="text-sm text-[#6B7280]">No drafts yet.</p>
 				</Card>
 			{:else}
 				{#each data.drafts as draft}
-					<Card>
+					<Card class="p-6">
 						<h3 class="font-semibold text-[#1F2937]">{draft.title}</h3>
 						<p class="mb-3 text-sm text-[#6B7280]">
 							Last updated: {new Date(draft.updatedAt).toLocaleString()}

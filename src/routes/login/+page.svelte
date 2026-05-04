@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Card from '$lib/components/ui/Card.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
-	import Input from '$lib/components/ui/Input.svelte';
+	import { Card } from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
 </script>
 
 <main
-	class="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#FAFAFC] to-[#F1EEFF] px-6 py-10"
+	class="flex min-h-screen items-center justify-center bg-linear-to-b from-[#FAFAFC] to-[#F1EEFF] px-6 py-10"
 >
-	<Card class="w-full max-w-md">
+	<Card class="w-full max-w-md p-6">
 		<h1 class="mb-1 text-2xl font-bold text-[#1F2937]">Deskriptia</h1>
 		<p class="mb-6 text-sm text-[#6B7280]">Sign in or create an account to continue.</p>
 

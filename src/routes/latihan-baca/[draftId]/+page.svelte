@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Card from '$lib/components/ui/Card.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
-	import Textarea from '$lib/components/ui/Textarea.svelte';
-	import Input from '$lib/components/ui/Input.svelte';
+	import { Card } from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
+	import { Textarea } from '$lib/components/ui/textarea';
+	import { Input } from '$lib/components/ui/input';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -35,7 +35,7 @@ let saveMessage = $state('');
 
 <main class="mx-auto min-h-screen max-w-4xl px-6 py-8">
 	<a href="/dashboard" class="mb-4 inline-block text-sm text-[#5D4FC4] hover:underline">← Back</a>
-	<Card>
+	<Card class="p-6">
 		<h1 class="mb-1 text-2xl font-bold text-[#1F2937]">Practice Draft</h1>
 		<p class="mb-6 text-sm text-[#6B7280]">Material: {data.draft.materialTitle}</p>
 
