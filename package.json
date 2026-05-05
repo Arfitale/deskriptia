@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -25,12 +25,14 @@
 		"@eslint/compat": "^2.0.4",
 		"@eslint/js": "^10.0.1",
 		"@fontsource-variable/inter": "^5.2.8",
+		"@internationalized/date": "^3.12.0",
 		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/kit": "^2.57.0",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tailwindcss/vite": "^4.2.2",
 		"@types/node": "^22",
 		"better-auth": "~1.4.21",
+		"bits-ui": "^2.16.3",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.31.10",
 		"drizzle-orm": "^0.45.2",
@@ -55,6 +57,7 @@
 	"dependencies": {
 		"@lucide/svelte": "^1.14.0",
 		"marked": "^18.0.2",
+		"mode-watcher": "^1.1.0",
 		"shadcn-svelte": "^1.2.7"
 	}
 }

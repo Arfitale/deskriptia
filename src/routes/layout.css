@@ -1,7 +1,7 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn-svelte/tailwind.css";
-@import "@fontsource-variable/inter";
+@import 'tw-animate-css';
+@import 'shadcn-svelte/tailwind.css';
+@import '@fontsource-variable/inter';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -53,30 +53,53 @@ body {
 	color: var(--text);
 }
 
+.dark body {
+	background: radial-gradient(circle at top, #1a1040 0%, oklch(0.145 0 0) 40%);
+}
+
 .dark {
-	--background: oklch(0.145 0 0);
-	--foreground: oklch(0.985 0 0);
-	--card: oklch(0.205 0 0);
-	--card-foreground: oklch(0.985 0 0);
+	--background: oklch(0.145 0 0); /* near-black bg — keep */
+	--foreground: oklch(0.985 0 0); /* near-white text — keep */
+	--card: oklch(0.205 0 0); /* dark card — keep */
+	--card-foreground: oklch(0.985 0 0); /* keep */
 	--popover: oklch(0.205 0 0);
 	--popover-foreground: oklch(0.985 0 0);
-	--primary: oklch(0.922 0 0);
-	--primary-foreground: oklch(0.205 0 0);
-	--secondary: oklch(0.269 0 0);
-	--secondary-foreground: oklch(0.985 0 0);
+
+	/* ✅ Keep your brand purple — just slightly lighter for dark bg contrast */
+	--primary: #a996ff; /* was oklch(0.922 0 0) gray — FIXED */
+	--primary-foreground: #1a1040; /* dark text on light purple btn */
+	--primary-hover: #9381ff;
+
+	/* ✅ Secondary — purple tint on dark surface */
+	--secondary: #2a2250; /* was oklch(0.269 0 0) gray — FIXED */
+	--secondary-foreground: #c4b8ff; /* was oklch(0.985 0 0) */
+
+	/* ✅ Accent — subtle purple tint */
+	--accent: #1e1a3a; /* was gray — FIXED */
+	--accent-foreground: #c4b8ff;
+
+	/* Neutrals — these are fine as gray */
 	--muted: oklch(0.269 0 0);
 	--muted-foreground: oklch(0.708 0 0);
-	--accent: oklch(0.269 0 0);
-	--accent-foreground: oklch(0.985 0 0);
-	--destructive: oklch(0.704 0.191 22.216);
-	--border: oklch(1 0 0 / 10%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.556 0 0);
-	--chart-1: oklch(0.87 0 0);
-	--chart-2: oklch(0.556 0 0);
-	--chart-3: oklch(0.439 0 0);
-	--chart-4: oklch(0.371 0 0);
-	--chart-5: oklch(0.269 0 0);
+
+	--destructive: oklch(0.704 0.191 22.216); /* keep — red with chroma */
+
+	/* ✅ Ring should match your brand */
+	--ring: #9381ff; /* was gray — FIXED */
+
+	--border: oklch(1 0 0 / 10%); /* keep */
+	--input: oklch(1 0 0 / 15%); /* keep */
+
+	/* Custom tokens */
+	--primary-soft: #2a2250;
+	--success: #34d399;
+	--danger: #f87171;
+	--warning: #fbbf24;
+	--text: oklch(0.985 0 0);
+	--surface: oklch(0.205 0 0);
+	--bg: oklch(0.145 0 0);
+
+	/* Sidebar — keep as-is, these are intentionally neutral */
 	--sidebar: oklch(0.205 0 0);
 	--sidebar-foreground: oklch(0.985 0 0);
 	--sidebar-primary: oklch(0.488 0.243 264.376);

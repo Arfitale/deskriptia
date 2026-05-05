@@ -4,11 +4,15 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import type { ActionData } from './$types';
+	import AuthPage from '$lib/components/auth/AuthPage.svelte';
 
 	let { form }: { form: ActionData } = $props();
 </script>
 
-<main
+
+<AuthPage/>
+
+<!-- <main
 	class="flex min-h-screen items-center justify-center bg-linear-to-b from-[#FAFAFC] to-[#F1EEFF] px-6 py-10"
 >
 	<Card class="w-full max-w-md p-6">
@@ -41,4 +45,4 @@
 			<p class="mt-4 text-sm text-[#FF6B6B]">{form.message}</p>
 		{/if}
 	</Card>
-</main>
+</main> -->
