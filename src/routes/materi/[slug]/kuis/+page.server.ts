@@ -6,16 +6,24 @@ import { eq, and } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!locals.user) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/auth');
 	}
 
-	const materialRows = await db.select().from(materials).where(eq(materials.slug, params.slug)).limit(1);
+	const materialRows = await db
+		.select()
+		.from(materials)
+		.where(eq(materials.slug, params.slug))
+		.limit(1);
 	const material = materialRows[0];
 	if (!material) {
 		throw error(404, 'Material not found');
 	}
 
-	const quizRows = await db.select().from(quizzes).where(eq(quizzes.materialId, material.id)).limit(1);
+	const quizRows = await db
+		.select()
+		.from(quizzes)
+		.where(eq(quizzes.materialId, material.id))
+		.limit(1);
 	const quiz = quizRows[0];
 	if (!quiz) {
 		throw error(404, 'Quiz not found');

@@ -6,6 +6,7 @@
 		label,
 		placeholder,
 		Icon,
+		name = '',
 		value = $bindable('')
 	}: {
 		type?: string;
@@ -13,6 +14,7 @@
 		placeholder: string;
 		Icon: Component;
 		value?: string;
+		name?: string;
 	} = $props();
 
 	let focused = $state(false);
@@ -36,6 +38,8 @@
 		<input
 			{type}
 			{placeholder}
+			{name}
+			required
 			bind:value
 			onfocus={() => (focused = true)}
 			onblur={() => (focused = false)}

@@ -13,6 +13,14 @@
 
 	let vantaColor = $state(0x9381ff);
 	let vantaBg = $derived(mode.current === 'dark' ? 0x0a0a0a : 0xffffff);
+
+	let heroTypeTexts = $state([
+		'Menyenangkan',
+		'Fleksibel',
+		'Interaktif',
+		'Mudah Dipahami',
+		'Bermakna'
+	]);
 </script>
 
 <svelte:head>
@@ -58,12 +66,7 @@
 					</span>
 					<br />dengan Cara yang
 					<br />
-					<Typewriter
-						texts={['Menyenangkan', 'Efektif', 'Interaktif', 'Mudah Dipahami', 'Bermakna']}
-						speed={100}
-						deleteSpeed={50}
-						delay={1500}
-					/>
+					<Typewriter texts={heroTypeTexts} speed={100} deleteSpeed={50} delay={1500} />
 				</h1>
 
 				<p class="max-w-md text-base leading-relaxed text-muted-foreground">
@@ -73,7 +76,7 @@
 
 				<div class="flex flex-wrap items-center justify-center gap-3 md:justify-start">
 					<Button
-						href="/login"
+						href="/auth"
 						class="hover:bg-primary-hover rounded-full bg-primary px-6 py-2.5 font-bold text-white shadow-[0_4px_16px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-px"
 					>
 						Mulai Belajar

@@ -6,7 +6,7 @@ import { and, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!locals.user) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/auth');
 	}
 
 	const draftId = Number(params.draftId);

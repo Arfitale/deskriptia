@@ -2,7 +2,9 @@
 	import LoginPanel from './LoginPanel.svelte';
 	import RegisterPanel from './RegisterPanel.svelte';
 	import GradientOverlay from './GradientOverlay.svelte';
+	import type { ActionData } from '../../../routes/auth/$types'; // adjust path
 
+	let { form }: { form: ActionData } = $props();
 	let isLogin = $state(true);
 
 	function toggle() {
@@ -21,7 +23,7 @@
 <main class="relative z-10 flex min-h-screen items-center justify-center p-4">
 	<div
 		class="
-    relative flex min-h-145 w-full max-w-240
+    relative flex min-h-200 w-full max-w-240
     overflow-hidden rounded-3xl
     border border-white/8
     bg-white/4
@@ -37,8 +39,8 @@
     "
 		></div>
 
-		<LoginPanel {isLogin} onToggle={toggle} />
-		<RegisterPanel {isLogin} onToggle={toggle} />
+		<LoginPanel {isLogin} {form} onToggle={toggle} />
+		<RegisterPanel {isLogin} {form} onToggle={toggle} />
 		<GradientOverlay {isLogin} onToggle={toggle} />
 	</div>
 </main>

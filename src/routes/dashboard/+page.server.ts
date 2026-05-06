@@ -6,7 +6,7 @@ import { and, desc, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/auth');
 	}
 
 	const allMaterials = await db.select().from(materials);
@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	createDraft: async ({ request, locals }) => {
 		if (!locals.user) {
-			throw redirect(302, '/login');
+			throw redirect(302, '/auth');
 		}
 
 		const formData = await request.formData();

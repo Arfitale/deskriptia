@@ -4,9 +4,13 @@
 	import SubmitButton from './SubmitButton.svelte';
 	import { Mail, KeyRound } from '@lucide/svelte';
 	import { LogIn } from '@lucide/svelte';
+	import type { ActionData } from '../../../routes/auth/$types'; // adjust path
+	import { enhance } from '$app/forms';
 
-	let { isLogin, onToggle }: { isLogin: boolean; onToggle: () => void } = $props();
+	let { isLogin, onToggle, form }: { isLogin: boolean; onToggle: () => void; form: ActionData } =
+		$props();
 
+	let isLoading = $state(false);
 	let email = $state('');
 	let password = $state('');
 	let remember = $state(false);
@@ -31,17 +35,31 @@
 		<p class="text-sm text-muted-foreground">Masuk untuk melanjutkan perjalananmu</p>
 	</div>
 
-	<div class="w-full max-w-75 space-y-4">
+	<form
+		class="w-full max-w-75 space-y-4"
+		method="POST"
+		action="?/signInEmail"
+		use:enhance={() => {
+			isLoading = true; // ← set loading BEFORE submit
+
+			return async ({ update }) => {
+				await update();
+				isLoading = false; // ← unset AFTER response
+			};
+		}}
+	>
 		<FormInput
 			type="email"
 			label="Email"
 			placeholder="kamu@contoh.com"
+			name="email"
 			Icon={Mail}
 			bind:value={email}
 		/>
 		<FormInput
 			type="password"
 			label="Kata Sandi"
+			name="password"
 			placeholder="••••••••"
 			Icon={KeyRound}
 			bind:value={password}
@@ -58,14 +76,19 @@
 				class="font-medium text-primary transition-colors hover:text-primary/80">Lupa kata sandi?</a
 			>
 		</div>
+		{#if form?.message && form?.action === 'login'}
+			<p class="text-sm text-red-500">{form.message}</p>
+		{/if}
 
-		<SubmitButton label="Masuk" variant="default" />
+		<SubmitButton label="Masuk" variant="default" {isLoading} />
 		<SocialLogin label="atau lanjutkan dengan" />
-	</div>
+	</form>
 
 	<!-- Mobile toggle -->
 	<p class="mt-6 text-sm text-muted-foreground md:hidden">
 		Belum punya akun?
-		<button onclick={onToggle} class="font-semibold text-primary hover:underline">Daftar</button>
+		<button onclick={onToggle} class="cursor-pointer font-semibold text-primary hover:underline"
+			>Daftar</button
+		>
 	</p>
 </div>

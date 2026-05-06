@@ -12,6 +12,7 @@ export const load: PageServerLoad = ({ locals }) => {
 
 export const actions: Actions = {
 	signInEmail: async ({ request }) => {
+		console.log('sign in...');
 		const formData = await request.formData();
 		const email = formData.get('email')?.toString() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
@@ -22,14 +23,15 @@ export const actions: Actions = {
 			});
 		} catch (error) {
 			if (error instanceof APIError) {
-				return fail(400, { message: error.message || 'Sign in failed' });
+				return fail(400, { message: error.message || 'Sign in failed', action: 'login' });
 			}
-			return fail(500, { message: 'Unexpected error' });
+			return fail(500, { message: 'Unexpected error', action: 'login' });
 		}
 
 		throw redirect(302, '/dashboard');
 	},
 	signUpEmail: async ({ request }) => {
+		console.log('sign up...');
 		const formData = await request.formData();
 		const email = formData.get('email')?.toString() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
@@ -41,11 +43,11 @@ export const actions: Actions = {
 			});
 		} catch (error) {
 			if (error instanceof APIError) {
-				return fail(400, { message: error.message || 'Sign up failed' });
+				return fail(400, { message: error.message || 'Sign up failed', action: 'register' });
 			}
-			return fail(500, { message: 'Unexpected error' });
+			return fail(500, { message: 'Unexpected error', action: 'register' });
 		}
-
+		console.log(true);
 		throw redirect(302, '/dashboard');
 	}
 };
