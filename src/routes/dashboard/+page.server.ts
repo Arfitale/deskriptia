@@ -3,11 +3,16 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { drafts, materials, userProgress } from '$lib/server/db/schema';
 import { and, desc, eq } from 'drizzle-orm';
+import { enforceOnboardingGuard } from '$lib/server/guards/onboarding';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async (event) => {
+	const { locals } = event;
 	if (!locals.user) {
 		throw redirect(302, '/auth');
 	}
+
+	// Enforce onboarding/pretest completion before dashboard access
+	await enforceOnboardingGuard(event);
 
 	const allMaterials = await db.select().from(materials);
 	const progress = await db

@@ -2,9 +2,17 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { APIError } from 'better-auth/api';
+import { getUserOnboardingStatus } from '$lib/server/guards/onboarding';
 
-export const load: PageServerLoad = ({ locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
+		const status = await getUserOnboardingStatus(locals.user.id);
+		if (!status.hasCompletedOnboarding) {
+			throw redirect(302, '/onboarding');
+		}
+		if (!status.hasCompletedPretest) {
+			throw redirect(302, '/pretest');
+		}
 		throw redirect(302, '/dashboard');
 	}
 	return {};
@@ -12,7 +20,6 @@ export const load: PageServerLoad = ({ locals }) => {
 
 export const actions: Actions = {
 	signInEmail: async ({ request }) => {
-		console.log('sign in...');
 		const formData = await request.formData();
 		const email = formData.get('email')?.toString() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
@@ -28,10 +35,9 @@ export const actions: Actions = {
 			return fail(500, { message: 'Unexpected error', action: 'login' });
 		}
 
-		throw redirect(302, '/dashboard');
+		throw redirect(302, '/onboarding');
 	},
 	signUpEmail: async ({ request }) => {
-		console.log('sign up...');
 		const formData = await request.formData();
 		const email = formData.get('email')?.toString() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
@@ -47,7 +53,6 @@ export const actions: Actions = {
 			}
 			return fail(500, { message: 'Unexpected error', action: 'register' });
 		}
-		console.log(true);
-		throw redirect(302, '/dashboard');
+		throw redirect(302, '/onboarding');
 	}
 };
