@@ -23,7 +23,7 @@
 >
 	<!-- Icon container -->
 	<div
-		class="flex size-24 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 shadow-inner ring-1 ring-primary/10 md:size-28"
+		class="flex size-24 items-center justify-center rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 shadow-inner ring-1 ring-primary/10 md:size-28"
 	>
 		{@render icon()}
 	</div>

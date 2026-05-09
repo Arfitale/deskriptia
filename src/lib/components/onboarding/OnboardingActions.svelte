@@ -51,7 +51,7 @@
 	<div class="min-w-[100px] text-right">
 		<Button
 			onclick={onNext}
-			class="gap-1.5 rounded-full bg-primary px-6 font-semibold text-primary-foreground shadow-[0_4px_16px_rgba(147,129,255,0.3)] transition-transform hover:-translate-y-px hover:bg-[var(--primary-hover)]"
+			class="gap-1.5 rounded-full bg-primary px-6 font-semibold text-primary-foreground shadow-[0_4px_16px_rgba(147,129,255,0.3)] transition-transform hover:-translate-y-px hover:bg-(--primary-hover)"
 		>
 			{isLast ? 'Mulai Perjalanan' : 'Lanjut'}
 			{#if !isLast}

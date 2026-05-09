@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, index } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -9,6 +9,8 @@ export const user = pgTable("user", {
   image: text("image"),
   hasCompletedOnboarding: boolean("has_completed_onboarding").default(false).notNull(),
   hasCompletedPretest: boolean("has_completed_pretest").default(false).notNull(),
+  pretestScore: integer("pretest_score"),
+  pretestCompletedAt: timestamp("pretest_completed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

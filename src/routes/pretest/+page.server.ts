@@ -4,6 +4,10 @@ import {
 	getUserOnboardingStatus,
 	completePretest
 } from '$lib/server/guards/onboarding';
+import {
+	PRETEST_QUESTIONS,
+	calculatePretestScore
+} from '$lib/data/pretest-questions';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -34,13 +38,29 @@ export const actions: Actions = {
 		}
 
 		const formData = await request.formData();
-		const answers = formData.getAll('answer');
+		const rawAnswers = formData.getAll('answer');
 
-		// For MVP: just accept any submission — real scoring comes later
-		// You could store answers in a separate table if needed
-		const _submittedAnswers = answers.map((a) => a.toString());
+		// Parse answers into numbers, validate length
+		const answers = rawAnswers.map((a) => {
+			const n = Number(a);
+			return Number.isNaN(n) ? -1 : n;
+		});
 
-		await completePretest(locals.user.id);
-		throw redirect(302, '/dashboard');
+		if (answers.length !== PRETEST_QUESTIONS.length) {
+			return { success: false as const, error: 'Semua soal harus dijawab.' };
+		}
+
+		const result = calculatePretestScore(answers);
+
+		await completePretest(locals.user.id, result.score);
+
+		// Return result to client instead of redirecting —
+		// so the page can show the result summary screen
+		return {
+			success: true as const,
+			score: result.score,
+			correctCount: result.correctCount,
+			totalQuestions: result.totalQuestions
+		};
 	}
 };

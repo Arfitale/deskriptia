@@ -84,11 +84,15 @@ export async function completeOnboarding(userId: string) {
 }
 
 /**
- * Marks pretest as completed for a user.
+ * Marks pretest as completed for a user and saves their score.
  */
-export async function completePretest(userId: string) {
+export async function completePretest(userId: string, score: number) {
 	await db
 		.update(userTable)
-		.set({ hasCompletedPretest: true })
+		.set({
+			hasCompletedPretest: true,
+			pretestScore: score,
+			pretestCompletedAt: new Date()
+		})
 		.where(eq(userTable.id, userId));
 }
