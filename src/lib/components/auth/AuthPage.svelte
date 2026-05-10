@@ -3,12 +3,15 @@
 	import RegisterPanel from './RegisterPanel.svelte';
 	import GradientOverlay from './GradientOverlay.svelte';
 	import type { ActionData } from '../../../routes/auth/$types'; // adjust path
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	let { form }: { form: ActionData } = $props();
-	let isLogin = $state(true);
+	let isLogin = $derived(page.url.searchParams.get('mode') === 'login');
 
 	function toggle() {
-		isLogin = !isLogin;
+		goto(resolve(`/auth?mode=${isLogin ? 'register' : 'login'}`), { replaceState: true });
 	}
 </script>
 

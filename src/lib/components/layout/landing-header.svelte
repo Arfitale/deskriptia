@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from "$lib/assets/logo.png"
+	import logo from '$lib/assets/logo.png';
 	import { Button } from '$lib/components/ui/button';
 	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 	import MobileNav from './mobile-nav.svelte';
@@ -23,7 +23,7 @@
 		<!-- Left: Logo + App Name -->
 		<a
 			href="/"
-			class="flex items-center gap-2.5 transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-lg"
+			class="flex items-center gap-2.5 rounded-lg transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 			aria-label="Deskriptia — Beranda"
 		>
 			<img src={logo} alt="" class="size-7" aria-hidden="true" />
@@ -32,7 +32,7 @@
 
 		<!-- Center: Desktop navigation -->
 		<nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
-			{#each navLinks as link}
+			{#each navLinks as link, i (i)}
 				<a
 					href={link.href}
 					class="rounded-lg px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
@@ -56,7 +56,7 @@
 					</Button>
 				{:else}
 					<Button
-						href="/auth"
+						href="/auth?mode=login"
 						variant="ghost"
 						size="sm"
 						class="rounded-full px-4 font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -64,7 +64,7 @@
 						Masuk
 					</Button>
 					<Button
-						href="/auth"
+						href="/auth?mode=register"
 						size="sm"
 						class="rounded-full bg-primary px-5 font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary-hover hover:shadow-md"
 					>

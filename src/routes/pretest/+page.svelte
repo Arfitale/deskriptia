@@ -126,7 +126,7 @@
 			<Button
 				type="button"
 				onclick={startQuiz}
-				class="mt-2 gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground shadow-[0_4px_20px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-0.5 hover:bg-(--primary-hover)"
+				class="mt-2 gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground shadow-[0_4px_20px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-0.5 hover:bg-primary-hover"
 				aria-label="Mulai mengerjakan pre-test"
 			>
 				Mulai Pre-Test
@@ -370,7 +370,7 @@
 			<Button
 				type="button"
 				onclick={goToDashboard}
-				class="mt-2 gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground shadow-[0_4px_20px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-0.5 hover:bg-(--primary-hover)"
+				class="mt-2 gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground shadow-[0_4px_20px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-0.5 hover:bg-primary-hover"
 				aria-label="Lanjut ke halaman dashboard"
 			>
 				<LayoutDashboard class="size-4" />
