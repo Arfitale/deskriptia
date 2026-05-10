@@ -5,6 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Card } from '$lib/components/ui/card';
 	import { Separator } from '$lib/components/ui/separator';
+	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 	import { PRETEST_QUESTIONS, getPretestFeedback } from '$lib/data/pretest-questions';
 	import {
 		ClipboardCheck,
@@ -77,6 +78,10 @@
 <div
 	class="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 py-12"
 >
+	<div class="absolute top-6 right-6 z-50 sm:top-8 sm:right-8">
+		<ModeToggler />
+	</div>
+
 	<!-- Background decoration -->
 	<div
 		class="pointer-events-none absolute -top-32 -right-32 size-96 rounded-full bg-primary/5 blur-[100px]"

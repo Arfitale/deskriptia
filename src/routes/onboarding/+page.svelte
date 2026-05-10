@@ -6,6 +6,7 @@
 	import OnboardingActions from '$lib/components/onboarding/OnboardingActions.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { BookOpen, Gamepad2, Trophy, Sparkles, ArrowRight } from '@lucide/svelte';
+	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -76,6 +77,10 @@
 <div
 	class="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 py-12"
 >
+	<div class="absolute top-6 right-6 z-50 sm:top-8 sm:right-8">
+		<ModeToggler />
+	</div>
+
 	<!-- Background decoration -->
 	<div
 		class="pointer-events-none absolute -top-32 -right-32 size-96 rounded-full bg-primary/5 blur-[100px]"
