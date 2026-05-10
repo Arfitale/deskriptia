@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Footer from '$lib/components/global/Footer.svelte';
+	import LandingHeader from '$lib/components/layout/landing-header.svelte';
+	import LandingFooter from '$lib/components/layout/landing-footer.svelte';
 	import HeroBadge from '$lib/components/hero/HeroBadge.svelte';
 	import HeroStats from '$lib/components/hero/HeroStats.svelte';
 	import HeroImage from '$lib/components/hero/HeroImage.svelte';
@@ -8,8 +9,9 @@
 	import { ArrowRight } from '@lucide/svelte';
 	import Typewriter from '$lib/components/global/Typewriter.svelte';
 	import VantaBackground from '$lib/components/hero/VantaBackground.svelte';
-	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 	import { mode } from 'mode-watcher';
+
+	let { data } = $props();
 
 	let vantaColor = $state(0x9381ff);
 	let vantaBg = $derived(mode.current === 'dark' ? 0x0a0a0a : 0xffffff);
@@ -25,6 +27,10 @@
 
 <svelte:head>
 	<title>Deskriptia | Belajar Teks Deskripsi</title>
+	<meta
+		name="description"
+		content="Pelajari teks deskripsi Bahasa Indonesia dengan pengalaman interaktif dan menyenangkan."
+	/>
 </svelte:head>
 
 <div class="flex min-h-svh flex-col bg-transparent">
@@ -35,9 +41,7 @@
 		points={5}
 		spacing={25}
 	/>
-	<header class="flex w-full justify-end">
-		<ModeToggler />
-	</header>
+	<LandingHeader isAuthenticated={data.isAuthenticated} />
 	<main class="relative flex flex-1 items-center overflow-hidden px-6 py-20 md:px-12">
 		<!-- Background blobs -->
 		<div
@@ -100,5 +104,5 @@
 		</div>
 	</main>
 
-	<Footer />
+	<LandingFooter />
 </div>
