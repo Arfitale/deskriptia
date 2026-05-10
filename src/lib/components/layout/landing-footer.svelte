@@ -2,7 +2,7 @@
 	import logo from '$lib/assets/logo.png';
 </script>
 
-<footer class="w-full border-t border-border/40">
+<footer class="w-full border-t border-border/40 bg-background">
 	<div
 		class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 py-8 md:flex-row md:gap-4 md:px-6"
 	>
@@ -19,7 +19,7 @@
 
 		<!-- Right: Copyright -->
 		<div class="flex flex-col items-center gap-1 md:items-end">
-			<p class="text-xs text-muted-foreground">© 2026 Deskriptia</p>
+			<p class="text-xs text-muted-foreground">© 2026 Deskriptia - Ahmad Jaya</p>
 			<p class="text-xs text-muted-foreground/60">
 				Media pembelajaran interaktif Bahasa Indonesia.
 			</p>

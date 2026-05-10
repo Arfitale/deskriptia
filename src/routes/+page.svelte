@@ -43,15 +43,6 @@
 	/>
 	<LandingHeader isAuthenticated={data.isAuthenticated} />
 	<main class="relative flex flex-1 items-center overflow-hidden px-6 py-20 md:px-12">
-		<!-- Background blobs -->
-		<div
-			class="bg-primary-soft pointer-events-none absolute -top-24 -right-20 size-96 rounded-full opacity-60 blur-[80px]"
-			aria-hidden="true"
-		></div>
-		<div
-			class="pointer-events-none absolute -bottom-16 -left-16 size-72 rounded-full bg-blue-100 opacity-40 blur-[80px]"
-			aria-hidden="true"
-		></div>
 		<div
 			class="relative z-10 mx-auto flex w-full max-w-6xl flex-col-reverse items-center gap-12 md:flex-row md:gap-16"
 		>
@@ -64,7 +55,7 @@
 					<span class="relative inline-block text-primary">
 						Teks Deskripsi
 						<span
-							class="bg-primary-soft absolute bottom-1 left-0 -z-10 h-2 w-full rounded"
+							class="absolute bottom-1 left-0 -z-10 h-2 w-full rounded bg-primary-soft"
 							aria-hidden="true"
 						></span>
 					</span>
@@ -81,7 +72,7 @@
 				<div class="flex flex-wrap items-center justify-center gap-3 md:justify-start">
 					<Button
 						href="/auth"
-						class="hover:bg-primary-hover rounded-full bg-primary px-6 py-2.5 font-bold text-white shadow-[0_4px_16px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-px"
+						class="rounded-full bg-primary px-6 py-2.5 font-bold text-white shadow-[0_4px_16px_rgba(147,129,255,0.35)] transition-transform hover:-translate-y-px hover:bg-primary-hover"
 					>
 						Mulai Belajar
 						<ArrowRight class="ml-1 size-4" />

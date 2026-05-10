@@ -6,6 +6,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { ArrowLeft } from '@lucide/svelte';
 
 	let { form }: { form: ActionData } = $props();
 	let isLogin = $derived(page.url.searchParams.get('mode') === 'login');
@@ -24,6 +25,13 @@
 
 <!-- Card -->
 <main class="relative z-10 flex min-h-screen items-center justify-center p-4">
+	<a
+		href="/"
+		class="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/20 hover:pr-5 sm:top-8 sm:left-8"
+	>
+		<ArrowLeft class="h-4 w-4" />
+		Kembali
+	</a>
 	<div
 		class="
     relative flex min-h-200 w-full max-w-240
