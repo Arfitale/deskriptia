@@ -1,303 +1,191 @@
 <script lang="ts">
-	import AppCard from '$lib/components/ui/AppCard.svelte';
-	import SectionTitle from '$lib/components/ui/SectionTitle.svelte';
-	import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
-	import XPBadge from '$lib/components/ui/XPBadge.svelte';
-	import AnimatedButton from '$lib/components/ui/AnimatedButton.svelte';
-	import { BookOpen, Lock, CheckCircle, ArrowRight } from '@lucide/svelte';
+	import TrackHeader from '$lib/components/learn-track/TrackHeader.svelte';
+	import TrackProgressBar from '$lib/components/learn-track/TrackProgressBar.svelte';
+	import ChapterSection from '$lib/components/learn-track/ChapterSection.svelte';
+	import LearningNode from '$lib/components/learn-track/LearningNode.svelte';
+	import NodeConnector from '$lib/components/learn-track/NodeConnector.svelte';
+	import CompletionModal from '$lib/components/learn-track/CompletionModal.svelte';
+	import { learnTrack } from '$lib/data/learnTrack';
+	import type { LearningNode as LearningNodeType } from '$lib/data/learnTrack';
 
-	// Placeholder learning tracks
-	const tracks = [
-		{
-			id: 1,
-			title: 'Pengenalan Teks Deskriptif',
-			description: 'Pelajari apa itu teks deskriptif dan tujuan penulisannya.',
-			lessons: 5,
-			completed: 5,
-			xp: 50,
-			isLocked: false,
-			isDone: true
-		},
-		{
-			id: 2,
-			title: 'Struktur Teks Deskriptif',
-			description: 'Identifikasi dan tulis bagian identifikasi serta deskripsi.',
-			lessons: 6,
-			completed: 3,
-			xp: 60,
-			isLocked: false,
-			isDone: false
-		},
-		{
-			id: 3,
-			title: 'Ciri Kebahasaan',
-			description: 'Frasa nomina, kata sifat, dan kalimat efektif.',
-			lessons: 7,
-			completed: 0,
-			xp: 70,
-			isLocked: true,
-			isDone: false
-		},
-		{
-			id: 4,
-			title: 'Menulis Teks Sendiri',
-			description: 'Latihan menulis teks deskriptif lengkap dari nol.',
-			lessons: 8,
-			completed: 0,
-			xp: 100,
-			isLocked: true,
-			isDone: false
+	// Modal state
+	let showModal = $state(false);
+	let completedNode = $state<LearningNodeType | null>(null);
+	let nextNodeTitle = $state('');
+
+	function handleNodeClick(node: LearningNodeType, chapterIdx: number, nodeIdx: number) {
+		if (node.state === 'locked') return;
+
+		if (node.state === 'current') {
+			// Simulate completing the current node → show modal
+			const chapter = learnTrack.chapters[chapterIdx];
+			const nextNode = chapter.nodes[nodeIdx + 1] ?? learnTrack.chapters[chapterIdx + 1]?.nodes[0];
+			completedNode = node;
+			nextNodeTitle = nextNode?.title ?? '';
+			showModal = true;
 		}
-	];
+	}
+
+	function closeModal() {
+		showModal = false;
+		completedNode = null;
+	}
 </script>
 
 <svelte:head>
 	<title>Learn Track — Deskriptia</title>
-	<meta name="description" content="Jalur pembelajaran teks deskriptif Bahasa Indonesia." />
+	<meta
+		name="description"
+		content="Ikuti jalur belajar terstruktur untuk menguasai teks deskriptif Bahasa Indonesia."
+	/>
 </svelte:head>
 
 <div class="learn-page">
-	<header class="page-header">
-		<div class="page-header__text">
-			<h1 class="page-title">Learn Track</h1>
-			<p class="page-subtitle">Ikuti jalur belajar yang terstruktur untuk menguasai teks deskriptif.</p>
-		</div>
-		<XPBadge xp={110} />
-	</header>
+	<!-- Track Header -->
+	<TrackHeader
+		title={learnTrack.title}
+		subtitle={learnTrack.subtitle}
+		description={learnTrack.description}
+		totalXP={learnTrack.totalXP}
+		earnedXP={learnTrack.earnedXP}
+		completedLessons={learnTrack.completedLessons}
+		totalLessons={learnTrack.totalLessons}
+	/>
 
-	<!-- Overall progress -->
-	<AppCard variant="elevated" class="overall-progress-card">
-		<div class="overall-progress">
-			<div class="overall-progress__info">
-				<span class="overall-progress__label">Progres Keseluruhan</span>
-				<span class="overall-progress__fraction">2 / {tracks.length} selesai</span>
-			</div>
-			<ProgressBar value={2} max={tracks.length} />
-		</div>
-	</AppCard>
+	<!-- Progress Summary -->
+	<TrackProgressBar
+		completed={learnTrack.completedLessons}
+		total={learnTrack.totalLessons}
+		earnedXP={learnTrack.earnedXP}
+		totalXP={learnTrack.totalXP}
+	/>
 
-	<!-- Track list -->
-	<SectionTitle title="Materi Pembelajaran" subtitle="Selesaikan setiap materi secara berurutan." />
-
-	<div class="track-list">
-		{#each tracks as track, i}
-			<div class="track-item" class:locked={track.isLocked}>
-				<!-- Step indicator -->
-				<div class="track-step">
-					{#if track.isDone}
-						<div class="step-icon step-icon--done" aria-label="Selesai">
-							<CheckCircle size={18} />
-						</div>
-					{:else if track.isLocked}
-						<div class="step-icon step-icon--locked" aria-label="Terkunci">
-							<Lock size={16} />
-						</div>
-					{:else}
-						<div class="step-icon step-icon--active" aria-label="Sedang berjalan">
-							<span>{i + 1}</span>
-						</div>
-					{/if}
-					{#if i < tracks.length - 1}
-						<div class="step-connector" class:done={track.isDone}></div>
-					{/if}
+	<!-- Roadmap -->
+	<div class="roadmap">
+		{#each learnTrack.chapters as chapter, chapterIdx (chapterIdx)}
+			<!-- Chapter divider between chapters (not before first) -->
+			{#if chapterIdx > 0}
+				<div class="chapter-divider" aria-hidden="true">
+					<div class="chapter-divider__line"></div>
+					<div class="chapter-divider__dot"></div>
+					<div class="chapter-divider__line"></div>
 				</div>
+			{/if}
 
-				<!-- Card -->
-				<AppCard variant={track.isLocked ? 'default' : 'interactive'} class="track-card">
-					<div class="track-card__header">
-						<div class="track-card__meta">
-							<h3 class="track-card__title">{track.title}</h3>
-							<p class="track-card__desc">{track.description}</p>
-						</div>
-						<XPBadge xp={track.xp} size="sm" />
-					</div>
+			<ChapterSection
+				babLabel={chapter.title}
+				title={chapter.subtitle}
+				description={chapter.description}
+				nodeCount={chapter.nodes.length}
+				completedCount={chapter.nodes.filter((n) => n.state === 'completed').length}
+			>
+				{#each chapter.nodes as node, nodeIdx (nodeIdx)}
+					<LearningNode
+						id={node.id}
+						type={node.type}
+						state={node.state}
+						title={node.title}
+						description={node.description}
+						duration={node.duration}
+						xp={node.xp}
+						onclick={() => handleNodeClick(node, chapterIdx, nodeIdx)}
+					/>
 
-					{#if !track.isLocked}
-						<div class="track-card__footer">
-							<div class="track-card__progress">
-								<ProgressBar value={track.completed} max={track.lessons} showLabel label="{track.completed}/{track.lessons} pelajaran" />
-							</div>
-							<AnimatedButton
-								variant={track.isDone ? 'secondary' : 'primary'}
-								size="sm"
-								href="/learn/{track.id}"
-							>
-								{track.isDone ? 'Ulangi' : 'Mulai'}
-								<ArrowRight size={14} />
-							</AnimatedButton>
-						</div>
-					{:else}
-						<p class="track-card__locked-note">
-							<Lock size={12} style="display:inline; margin-right: 4px;" />
-							Selesaikan materi sebelumnya untuk membuka ini.
-						</p>
+					{#if nodeIdx < chapter.nodes.length - 1}
+						<NodeConnector state={node.state} />
 					{/if}
-				</AppCard>
-			</div>
+				{/each}
+			</ChapterSection>
 		{/each}
+
+		<!-- End of roadmap marker -->
+		<div class="roadmap-end" aria-label="Akhir dari track ini">
+			<div class="roadmap-end__line"></div>
+			<div class="roadmap-end__badge">
+				<span>🏁</span>
+				<span>Akhir Track</span>
+			</div>
+		</div>
 	</div>
 </div>
+
+<!-- Completion Modal -->
+<CompletionModal
+	show={showModal}
+	lessonTitle={completedNode?.title ?? ''}
+	xpEarned={completedNode?.xp ?? 0}
+	// {nextNodeTitle}
+	onclose={closeModal}
+	oncontinue={closeModal}
+/>
 
 <style>
 	.learn-page {
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
+		max-width: 640px;
+		margin: 0 auto;
+		width: 100%;
 	}
 
-	.page-header {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1rem;
-	}
-
-	.page-title {
-		font-size: 1.75rem;
-		font-weight: 800;
-		color: var(--text);
-		letter-spacing: -0.03em;
-		margin: 0 0 0.25rem;
-		line-height: 1.2;
-	}
-
-	.page-subtitle {
-		font-size: 0.9rem;
-		color: #718096;
-		margin: 0;
-	}
-
-	:global(.overall-progress-card) {
-		background: linear-gradient(135deg, var(--primary-soft), #fff) !important;
-	}
-
-	.overall-progress__info {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.6rem;
-	}
-
-	.overall-progress__label {
-		font-size: 0.85rem;
-		font-weight: 600;
-		color: var(--text);
-	}
-
-	.overall-progress__fraction {
-		font-size: 0.8rem;
-		color: #718096;
-	}
-
-	/* Track list */
-	.track-list {
+	/* Roadmap container */
+	.roadmap {
 		display: flex;
 		flex-direction: column;
 		gap: 0;
 	}
 
-	.track-item {
+	/* Chapter divider */
+	.chapter-divider {
 		display: flex;
-		gap: 1rem;
-		align-items: flex-start;
+		align-items: center;
+		gap: 0.75rem;
+		margin: 1.5rem 0 1.75rem;
+		padding-left: 19px; /* align with node center */
 	}
 
-	.track-item.locked {
-		opacity: 0.6;
+	.chapter-divider__line {
+		flex: 1;
+		height: 1px;
+		background: var(--border);
 	}
 
-	/* Step indicator */
-	.track-step {
+	.chapter-divider__dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--border);
+		flex-shrink: 0;
+	}
+
+	/* End of roadmap */
+	.roadmap-end {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		flex-shrink: 0;
-		padding-top: 0.2rem;
-	}
-
-	.step-icon {
-		width: 32px;
-		height: 32px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.8rem;
-		font-weight: 700;
-		flex-shrink: 0;
-	}
-
-	.step-icon--done {
-		background: var(--success);
-		color: #fff;
-	}
-
-	.step-icon--active {
-		background: var(--primary);
-		color: #fff;
-		box-shadow: 0 0 0 4px var(--primary-soft);
-	}
-
-	.step-icon--locked {
-		background: var(--border);
-		color: #718096;
-	}
-
-	.step-connector {
-		width: 2px;
-		flex: 1;
-		min-height: 24px;
-		background: var(--border);
-		margin: 4px 0;
-	}
-
-	.step-connector.done {
-		background: var(--success);
-	}
-
-	:global(.track-card) {
-		flex: 1;
-		margin-bottom: 1rem;
-	}
-
-	.track-card__header {
-		display: flex;
 		align-items: flex-start;
-		justify-content: space-between;
-		gap: 0.75rem;
-		margin-bottom: 0.75rem;
+		padding-left: 19px;
+		margin-top: 0.5rem;
 	}
 
-	.track-card__title {
-		font-size: 0.95rem;
-		font-weight: 700;
-		color: var(--text);
-		margin: 0 0 0.25rem;
+	.roadmap-end__line {
+		width: 2px;
+		height: 28px;
+		background: var(--border);
+		border-radius: 99px;
 	}
 
-	.track-card__desc {
-		font-size: 0.825rem;
-		color: #718096;
-		margin: 0;
-		line-height: 1.5;
-	}
-
-	.track-card__footer {
-		display: flex;
+	.roadmap-end__badge {
+		display: inline-flex;
 		align-items: center;
-		gap: 1rem;
-	}
-
-	.track-card__progress {
-		flex: 1;
-	}
-
-	.track-card__locked-note {
-		font-size: 0.775rem;
-		color: #718096;
-		margin: 0;
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
+		gap: 0.4rem;
+		background: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 0.5rem 1rem;
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--muted-foreground);
+		margin-top: 0.5rem;
 	}
 </style>

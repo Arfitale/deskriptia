@@ -33,7 +33,16 @@ export default defineConfig(
 				extraFileExtensions: ['.svelte'],
 				parser: ts.parser,
 				svelteConfig
-			}
+			},
+			'svelte/no-navigation-without-resolve': [
+				'error',
+				{
+					ignoreGoto: false,
+					ignoreLinks: false,
+					ignorePushState: false,
+					ignoreReplaceState: false
+				}
+			]
 		}
 	},
 	{
