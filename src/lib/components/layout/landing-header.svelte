@@ -4,6 +4,7 @@
 	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 	import MobileNav from './mobile-nav.svelte';
 	import { Menu } from '@lucide/svelte';
+	import Logo from '../global/Logo.svelte';
 
 	let { isAuthenticated = false }: { isAuthenticated?: boolean } = $props();
 
@@ -26,7 +27,7 @@
 			class="flex items-center gap-2.5 rounded-lg transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 			aria-label="Deskriptia — Beranda"
 		>
-			<img src={logo} alt="" class="size-7" aria-hidden="true" />
+			<Logo size={32} />
 			<span class="text-lg font-bold tracking-tight text-foreground">Deskriptia</span>
 		</a>
 

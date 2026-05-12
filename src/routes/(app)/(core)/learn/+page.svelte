@@ -40,8 +40,9 @@
 	/>
 </svelte:head>
 
-<div class="learn-page">
-	<!-- Track Header -->
+<!-- learn-page -->
+<div class="mx-auto flex w-full max-w-[640px] flex-col gap-6">
+	<!-- TrackHeader -->
 	<TrackHeader
 		title={learnTrack.title}
 		subtitle={learnTrack.subtitle}
@@ -52,7 +53,7 @@
 		totalLessons={learnTrack.totalLessons}
 	/>
 
-	<!-- Progress Summary -->
+	<!-- TrackProgressBar -->
 	<TrackProgressBar
 		completed={learnTrack.completedLessons}
 		total={learnTrack.totalLessons}
@@ -60,15 +61,18 @@
 		totalXP={learnTrack.totalXP}
 	/>
 
-	<!-- Roadmap -->
-	<div class="roadmap">
+	<!-- roadmap -->
+	<div class="flex flex-col">
 		{#each learnTrack.chapters as chapter, chapterIdx (chapterIdx)}
-			<!-- Chapter divider between chapters (not before first) -->
+			<!-- chapter-divider -->
 			{#if chapterIdx > 0}
-				<div class="chapter-divider" aria-hidden="true">
-					<div class="chapter-divider__line"></div>
-					<div class="chapter-divider__dot"></div>
-					<div class="chapter-divider__line"></div>
+				<div class="my-6 flex items-center gap-3 pl-[19px]" aria-hidden="true">
+					<!-- divider-line -->
+					<div class="h-px flex-1 bg-border"></div>
+					<!-- divider-dot -->
+					<div class="h-2 w-2 shrink-0 rounded-full bg-border"></div>
+					<!-- divider-line -->
+					<div class="h-px flex-1 bg-border"></div>
 				</div>
 			{/if}
 
@@ -98,10 +102,14 @@
 			</ChapterSection>
 		{/each}
 
-		<!-- End of roadmap marker -->
-		<div class="roadmap-end" aria-label="Akhir dari track ini">
-			<div class="roadmap-end__line"></div>
-			<div class="roadmap-end__badge">
+		<!-- roadmap-end -->
+		<div class="mt-2 flex flex-col items-start pl-[19px]" aria-label="Akhir dari track ini">
+			<!-- end-line -->
+			<div class="h-7 w-0.5 rounded-full bg-border"></div>
+			<!-- end-badge -->
+			<div
+				class="mt-2 inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted px-4 py-2 text-[0.8rem] font-semibold text-muted-foreground"
+			>
 				<span>🏁</span>
 				<span>Akhir Track</span>
 			</div>
@@ -109,83 +117,11 @@
 	</div>
 </div>
 
-<!-- Completion Modal -->
+<!-- CompletionModal -->
 <CompletionModal
 	show={showModal}
 	lessonTitle={completedNode?.title ?? ''}
 	xpEarned={completedNode?.xp ?? 0}
-	// {nextNodeTitle}
 	onclose={closeModal}
 	oncontinue={closeModal}
 />
-
-<style>
-	.learn-page {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-		max-width: 640px;
-		margin: 0 auto;
-		width: 100%;
-	}
-
-	/* Roadmap container */
-	.roadmap {
-		display: flex;
-		flex-direction: column;
-		gap: 0;
-	}
-
-	/* Chapter divider */
-	.chapter-divider {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		margin: 1.5rem 0 1.75rem;
-		padding-left: 19px; /* align with node center */
-	}
-
-	.chapter-divider__line {
-		flex: 1;
-		height: 1px;
-		background: var(--border);
-	}
-
-	.chapter-divider__dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: var(--border);
-		flex-shrink: 0;
-	}
-
-	/* End of roadmap */
-	.roadmap-end {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		padding-left: 19px;
-		margin-top: 0.5rem;
-	}
-
-	.roadmap-end__line {
-		width: 2px;
-		height: 28px;
-		background: var(--border);
-		border-radius: 99px;
-	}
-
-	.roadmap-end__badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		background: var(--muted);
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		padding: 0.5rem 1rem;
-		font-size: 0.8rem;
-		font-weight: 600;
-		color: var(--muted-foreground);
-		margin-top: 0.5rem;
-	}
-</style>

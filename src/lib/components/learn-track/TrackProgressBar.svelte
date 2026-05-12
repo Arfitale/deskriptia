@@ -24,210 +24,87 @@
 	});
 </script>
 
-<div class="progress-summary">
-	<div class="progress-summary__header">
-		<div class="progress-summary__left">
-			<span class="progress-summary__title">Progres Keseluruhan</span>
-			<span class="progress-summary__fraction"
-				><strong>{completed}</strong> / {total} pelajaran selesai</span
-			>
+<!-- progress-summary -->
+<div
+	class="rounded-2xl border border-border bg-(--surface) px-6 py-5 shadow-[0_4px_16px_rgba(147,129,255,0.07)]"
+>
+	<!-- header -->
+	<div class="mb-3.5 flex items-start justify-between gap-4">
+		<!-- left -->
+		<div class="flex flex-col gap-1">
+			<!-- title -->
+			<span class="text-[0.82rem] font-semibold tracking-[0.06em] text-muted-foreground uppercase">
+				Progres Keseluruhan
+			</span>
+			<!-- fraction -->
+			<span class="text-base font-normal text-foreground">
+				<strong class="font-extrabold text-primary">{completed}</strong> / {total} pelajaran selesai
+			</span>
 		</div>
-		<div class="progress-summary__percentage-badge" aria-label="{percentage}% selesai">
+		<!-- percentage-badge -->
+		<div
+			class="shrink-0 text-[1.4rem] leading-none font-extrabold tracking-[-0.04em] text-primary"
+			aria-label="{percentage}% selesai"
+		>
 			{percentage}%
 		</div>
 	</div>
 
-	<div class="progress-bar-track" role="progressbar" aria-valuenow={completed} aria-valuemin={0} aria-valuemax={total} aria-label="Progres belajar">
+	<!-- progress-bar-track -->
+	<div
+		class="mb-3.5 h-2.5 overflow-hidden rounded-full bg-muted"
+		role="progressbar"
+		aria-valuenow={completed}
+		aria-valuemin={0}
+		aria-valuemax={total}
+		aria-label="Progres belajar"
+	>
+		<!-- progress-bar-fill -->
 		<div
-			class="progress-bar-fill"
+			class="relative h-full overflow-hidden rounded-full bg-linear-to-r from-primary to-[#b3a3ff] transition-[width] duration-900 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
 			style:width={mounted ? `${percentage}%` : '0%'}
 		>
-			<div class="progress-bar-glow"></div>
+			<!-- progress-bar-glow -->
+			<div
+				class="absolute inset-0 animate-[shimmer_2.5s_ease-in-out_infinite] bg-linear-to-r from-transparent via-white/35 to-transparent"
+			></div>
 		</div>
 	</div>
 
-	<div class="progress-summary__footer">
-		<div class="xp-mini">
-			<span class="xp-mini__earned">{earnedXP} XP</span>
-			<span class="xp-mini__sep">·</span>
-			<span class="xp-mini__total">{totalXP} XP total</span>
+	<!-- footer -->
+	<div class="flex items-center justify-between gap-3">
+		<!-- xp-mini -->
+		<div class="flex items-center gap-1.5 text-[0.78rem]">
+			<!-- xp-earned -->
+			<span
+				class="rounded-full border border-[#fbbf24] bg-linear-to-br from-[#fef3c7] to-[#fde68a] px-2.5 py-0.5 font-bold text-[#d97706]"
+			>
+				{earnedXP} XP
+			</span>
+			<!-- separator -->
+			<span class="text-muted-foreground">·</span>
+			<!-- xp-total -->
+			<span class="text-muted-foreground">{totalXP} XP total</span>
 		</div>
-		<div class="lesson-chips">
+
+		<!-- lesson-chips -->
+		<div class="flex flex-wrap items-center justify-end gap-[3px] max-[500px]:hidden">
 			{#each Array(Math.min(total, 15)) as _, i}
+				<!-- lesson-pip -->
 				<div
-					class="lesson-pip"
-					class:lesson-pip--done={i < completed}
-					class:lesson-pip--current={i === completed}
+					class="h-2 w-2 rounded-full transition-[background,transform] duration-200 ease-out"
+					class:bg-[var(--primary)]={i < completed || i === completed}
+					class:bg-[var(--border)]={i > completed}
+					class:shadow-[0_0_0_3px_color-mix(in_srgb,var(--primary)_20%,transparent)]={i ===
+						completed}
+					class:scale-[1.3]={i === completed}
 					aria-hidden="true"
 				></div>
 			{/each}
 			{#if total > 15}
-				<span class="lesson-pip-more">+{total - 15}</span>
+				<!-- pip-more -->
+				<span class="ml-0.5 text-[0.7rem] text-muted-foreground">+{total - 15}</span>
 			{/if}
 		</div>
 	</div>
 </div>
-
-<style>
-	.progress-summary {
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 16px;
-		padding: 1.25rem 1.5rem;
-		box-shadow: 0 4px 16px rgba(147, 129, 255, 0.07);
-	}
-
-	.progress-summary__header {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 0.85rem;
-	}
-
-	.progress-summary__left {
-		display: flex;
-		flex-direction: column;
-		gap: 0.2rem;
-	}
-
-	.progress-summary__title {
-		font-size: 0.82rem;
-		font-weight: 600;
-		color: var(--muted-foreground);
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-	}
-
-	.progress-summary__fraction {
-		font-size: 1rem;
-		color: var(--foreground);
-		font-weight: 400;
-	}
-
-	.progress-summary__fraction strong {
-		font-weight: 800;
-		color: var(--primary);
-	}
-
-	.progress-summary__percentage-badge {
-		font-size: 1.4rem;
-		font-weight: 800;
-		color: var(--primary);
-		letter-spacing: -0.04em;
-		line-height: 1;
-		flex-shrink: 0;
-	}
-
-	/* Bar */
-	.progress-bar-track {
-		height: 10px;
-		background: var(--muted);
-		border-radius: 99px;
-		overflow: hidden;
-		margin-bottom: 0.85rem;
-	}
-
-	.progress-bar-fill {
-		height: 100%;
-		border-radius: 99px;
-		background: linear-gradient(90deg, var(--primary), #b3a3ff);
-		transition: width 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
-		position: relative;
-		overflow: hidden;
-	}
-
-	.progress-bar-glow {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			90deg,
-			transparent 0%,
-			rgba(255, 255, 255, 0.35) 50%,
-			transparent 100%
-		);
-		animation: shimmer 2.5s ease-in-out infinite;
-	}
-
-	@keyframes shimmer {
-		0% {
-			transform: translateX(-100%);
-		}
-		60%,
-		100% {
-			transform: translateX(200%);
-		}
-	}
-
-	/* Footer */
-	.progress-summary__footer {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-	}
-
-	.xp-mini {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-		font-size: 0.78rem;
-	}
-
-	.xp-mini__earned {
-		font-weight: 700;
-		color: #d97706;
-		background: linear-gradient(135deg, #fef3c7, #fde68a);
-		border: 1px solid #fbbf24;
-		border-radius: 99px;
-		padding: 0.15rem 0.6rem;
-	}
-
-	.xp-mini__sep {
-		color: var(--muted-foreground);
-	}
-
-	.xp-mini__total {
-		color: var(--muted-foreground);
-	}
-
-	.lesson-chips {
-		display: flex;
-		align-items: center;
-		gap: 3px;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-	}
-
-	.lesson-pip {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: var(--border);
-		transition:
-			background 0.3s ease,
-			transform 0.2s ease;
-	}
-
-	.lesson-pip--done {
-		background: var(--primary);
-	}
-
-	.lesson-pip--current {
-		background: var(--primary);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
-		transform: scale(1.3);
-	}
-
-	.lesson-pip-more {
-		font-size: 0.7rem;
-		color: var(--muted-foreground);
-		margin-left: 2px;
-	}
-
-	@media (max-width: 500px) {
-		.lesson-chips {
-			display: none;
-		}
-	}
-</style>

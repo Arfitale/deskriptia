@@ -22,227 +22,88 @@
 	const xpPercentage = $derived(Math.round((earnedXP / totalXP) * 100));
 </script>
 
-<header class="track-header">
-	<div class="track-header__bg-orb"></div>
-	<div class="track-header__bg-orb track-header__bg-orb--2"></div>
+<!-- track-header -->
+<header
+	class="relative flex items-center justify-between gap-6 overflow-hidden rounded-[20px] bg-linear-to-br from-[#6c55d9] via-[#9381ff] to-[#b3a3ff] p-8 shadow-[0_8px_32px_rgba(147,129,255,0.3),0_2px_8px_rgba(147,129,255,0.15)] max-[560px]:p-6"
+>
+	<!-- bg-orb-1 -->
+	<div
+		class="pointer-events-none absolute top-[-60px] right-[80px] h-[200px] w-[200px] rounded-full bg-white/[0.07]"
+	></div>
+	<!-- bg-orb-2 -->
+	<div
+		class="pointer-events-none absolute bottom-[-40px] left-[40%] h-[120px] w-[120px] rounded-full bg-white/5"
+	></div>
 
-	<div class="track-header__content">
-		<div class="track-header__label">
+	<!-- content -->
+	<div class="relative z-10 flex-1">
+		<!-- label -->
+		<div
+			class="mb-3 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/18 px-3 py-1 text-[0.7rem] font-semibold tracking-[0.03em] text-white/92 uppercase"
+		>
 			<TrendingUp size={13} />
 			<span>{subtitle}</span>
 		</div>
 
-		<h1 class="track-header__title">{title}</h1>
-		<p class="track-header__description">{description}</p>
+		<!-- title -->
+		<h1
+			class="m-0 mb-2 text-2xl leading-tight font-extrabold tracking-tight text-white max-[560px]:text-[1.2rem]"
+		>
+			{title}
+		</h1>
 
-		<div class="track-header__stats">
-			<div class="stat-chip stat-chip--lessons">
+		<!-- description -->
+		<p class="m-0 mb-5 max-w-[440px] text-[0.875rem] leading-[1.55] text-white/80">
+			{description}
+		</p>
+
+		<!-- stats -->
+		<div class="flex flex-wrap gap-2">
+			<!-- stat-chip: lessons -->
+			<div
+				class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[0.78rem] font-semibold text-white backdrop-blur-sm"
+			>
 				<BookOpen size={13} />
 				<span>{completedLessons}/{totalLessons} pelajaran</span>
 			</div>
-			<div class="stat-chip stat-chip--xp">
+			<!-- stat-chip: xp -->
+			<div
+				class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[0.78rem] font-semibold text-white backdrop-blur-sm"
+			>
 				<Zap size={13} />
 				<span>{earnedXP}/{totalXP} XP</span>
 			</div>
-			<div class="stat-chip stat-chip--progress">
-				<span class="stat-dot"></span>
+			<!-- stat-chip: progress -->
+			<div
+				class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[0.78rem] font-semibold text-white backdrop-blur-sm"
+			>
+				<!-- stat-dot -->
+				<span
+					class="h-[7px] w-[7px] animate-[pulse-dot_2s_ease-in-out_infinite] rounded-full bg-[#6ee7b7] shadow-[0_0_6px_rgba(110,231,183,0.7)]"
+				></span>
 				<span>{xpPercentage}% selesai</span>
 			</div>
 		</div>
 	</div>
 
-	<div class="track-header__illustration" aria-hidden="true">
-		<div class="illustration-ring illustration-ring--outer"></div>
-		<div class="illustration-ring illustration-ring--inner"></div>
-		<div class="illustration-icon">
+	<!-- illustration -->
+	<div
+		class="relative z-10 flex h-[88px] w-[88px] shrink-0 items-center justify-center max-[560px]:hidden"
+		aria-hidden="true"
+	>
+		<!-- illustration-ring: outer -->
+		<div
+			class="absolute h-[88px] w-[88px] animate-[rotate-ring_12s_linear_infinite] rounded-full border-2 border-white/20"
+		></div>
+		<!-- illustration-ring: inner -->
+		<div
+			class="absolute h-16 w-16 animate-[rotate-ring_8s_linear_infinite_reverse] rounded-full border-2 border-white/20"
+		></div>
+		<!-- illustration-icon -->
+		<div
+			class="flex h-[52px] w-[52px] items-center justify-center rounded-[14px] border border-white/30 bg-white/20 text-white backdrop-blur-sm"
+		>
 			<BookOpen size={28} />
 		</div>
 	</div>
 </header>
-
-<style>
-	.track-header {
-		position: relative;
-		background: linear-gradient(135deg, #6c55d9 0%, #9381ff 50%, #b3a3ff 100%);
-		border-radius: 20px;
-		padding: 2rem;
-		overflow: hidden;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1.5rem;
-		box-shadow:
-			0 8px 32px rgba(147, 129, 255, 0.3),
-			0 2px 8px rgba(147, 129, 255, 0.15);
-	}
-
-	.track-header__bg-orb {
-		position: absolute;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.07);
-		pointer-events: none;
-	}
-
-	.track-header__bg-orb {
-		width: 200px;
-		height: 200px;
-		top: -60px;
-		right: 80px;
-	}
-
-	.track-header__bg-orb--2 {
-		width: 120px;
-		height: 120px;
-		bottom: -40px;
-		left: 40%;
-		background: rgba(255, 255, 255, 0.05);
-	}
-
-	.track-header__content {
-		position: relative;
-		z-index: 1;
-		flex: 1;
-	}
-
-	.track-header__label {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		background: rgba(255, 255, 255, 0.18);
-		color: rgba(255, 255, 255, 0.92);
-		border: 1px solid rgba(255, 255, 255, 0.25);
-		border-radius: 99px;
-		padding: 0.25rem 0.7rem;
-		font-size: 0.7rem;
-		font-weight: 600;
-		letter-spacing: 0.03em;
-		text-transform: uppercase;
-		margin-bottom: 0.75rem;
-	}
-
-	.track-header__title {
-		font-size: 1.5rem;
-		font-weight: 800;
-		color: #fff;
-		margin: 0 0 0.5rem;
-		letter-spacing: -0.03em;
-		line-height: 1.2;
-	}
-
-	.track-header__description {
-		font-size: 0.875rem;
-		color: rgba(255, 255, 255, 0.8);
-		margin: 0 0 1.25rem;
-		line-height: 1.55;
-		max-width: 440px;
-	}
-
-	.track-header__stats {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-
-	.stat-chip {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		background: rgba(255, 255, 255, 0.15);
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 99px;
-		padding: 0.3rem 0.75rem;
-		font-size: 0.78rem;
-		font-weight: 600;
-		color: #fff;
-	}
-
-	.stat-dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: #6ee7b7;
-		box-shadow: 0 0 6px rgba(110, 231, 183, 0.7);
-		animation: pulse-dot 2s ease-in-out infinite;
-	}
-
-	@keyframes pulse-dot {
-		0%,
-		100% {
-			opacity: 1;
-			transform: scale(1);
-		}
-		50% {
-			opacity: 0.6;
-			transform: scale(0.8);
-		}
-	}
-
-	/* Illustration */
-	.track-header__illustration {
-		position: relative;
-		flex-shrink: 0;
-		width: 88px;
-		height: 88px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 1;
-	}
-
-	.illustration-ring {
-		position: absolute;
-		border-radius: 50%;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		animation: rotate-ring 12s linear infinite;
-	}
-
-	.illustration-ring--outer {
-		width: 88px;
-		height: 88px;
-		animation-direction: normal;
-	}
-
-	.illustration-ring--inner {
-		width: 64px;
-		height: 64px;
-		animation-direction: reverse;
-		animation-duration: 8s;
-	}
-
-	@keyframes rotate-ring {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
-	.illustration-icon {
-		width: 52px;
-		height: 52px;
-		background: rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 14px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #fff;
-	}
-
-	@media (max-width: 560px) {
-		.track-header {
-			padding: 1.5rem;
-		}
-
-		.track-header__title {
-			font-size: 1.2rem;
-		}
-
-		.track-header__illustration {
-			display: none;
-		}
-	}
-</style>

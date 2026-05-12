@@ -17,6 +17,17 @@
 		oncontinue?: () => void;
 	} = $props();
 
+	const confettiDots = [
+		{ top: '10%', left: '15%', color: '#9381ff', delay: '0s' },
+		{ top: '5%', left: '70%', color: '#6ee7b7', delay: '300ms' },
+		{ top: '20%', right: '10%', color: '#fbbf24', delay: '600ms' },
+		{ top: '15%', left: '45%', color: '#f472b6', delay: '900ms' },
+		{ top: '30%', left: '5%', color: '#60a5fa', delay: '1200ms' },
+		{ top: '20%', right: '15%', color: '#a78bfa', delay: '1500ms' },
+		{ top: '40%', left: '60%', color: '#34d399', delay: '400ms' },
+		{ top: '40%', left: '90%', color: '#fb923c', delay: '800ms' }
+	];
+
 	function handleBackdropClick(e: MouseEvent) {
 		if (e.target === e.currentTarget) onclose?.();
 	}
@@ -41,30 +52,16 @@
 		>
 			<!-- Confetti dots -->
 			<div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-				<div
-					class="absolute top-[10%] left-[15%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_0s] rounded-full bg-[#9381ff]"
-				></div>
-				<div
-					class="absolute top-[5%] left-[70%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_300ms] rounded-full bg-[#6ee7b7]"
-				></div>
-				<div
-					class="absolute top-[20%] right-[10%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_600ms] rounded-full bg-[#fbbf24]"
-				></div>
-				<div
-					class="absolute top-[15%] left-[45%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_900ms] rounded-full bg-[#f472b6]"
-				></div>
-				<div
-					class="absolute bottom-[30%] left-[5%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_1200ms] rounded-full bg-[#60a5fa]"
-				></div>
-				<div
-					class="absolute right-[15%] bottom-[20%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_1500ms] rounded-full bg-[#a78bfa]"
-				></div>
-				<div
-					class="absolute bottom-[40%] left-[60%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_400ms] rounded-full bg-[#34d399]"
-				></div>
-				<div
-					class="absolute top-[40%] left-[90%] h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite_800ms] rounded-full bg-[#fb923c]"
-				></div>
+				{#each confettiDots as dot}
+					<div
+						class="absolute h-2 w-2 animate-[confetti-fall_3s_ease-in-out_infinite] rounded-full"
+						style:top={dot.top}
+						style:left={dot.left}
+						style:right={dot.right}
+						style:background-color={dot.color}
+						style:animation-delay={dot.delay}
+					></div>
+				{/each}
 			</div>
 
 			<!-- Icon -->
