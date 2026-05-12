@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { LayoutDashboard, BookOpen, PenLine, User } from '@lucide/svelte';
+	import Logo from '../global/Logo.svelte';
 
 	const navItems = [
 		{
@@ -34,7 +35,7 @@
 	<!-- Logo / Brand -->
 	<div class="sidebar-brand">
 		<a href="/dashboard" class="brand-link" aria-label="Go to dashboard">
-			<div class="brand-icon" aria-hidden="true">D</div>
+			<Logo class="w-6" />
 			<span class="brand-name">Deskriptia</span>
 		</a>
 	</div>

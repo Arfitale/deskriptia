@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from '$lib/assets/logo.png';
+	import Logo from '../global/Logo.svelte';
 </script>
 
 <footer class="w-full border-t border-border/40 bg-background">
@@ -9,7 +9,7 @@
 		<!-- Left: Brand -->
 		<div class="flex flex-col items-center gap-2 md:items-start">
 			<div class="flex items-center gap-2">
-				<img src={logo} alt="" class="size-5" aria-hidden="true" />
+				<Logo />
 				<span class="text-sm font-bold text-foreground">Deskriptia</span>
 			</div>
 			<p class="max-w-xs text-center text-xs leading-relaxed text-muted-foreground md:text-left">

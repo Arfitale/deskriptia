@@ -9,7 +9,7 @@
 	let { src, alt }: Props = $props();
 </script>
 
-<div class="relative flex w-full max-w-sm flex-1 justify-center md:max-w-md">
+<div class="relative hidden w-full max-w-sm flex-1 justify-center md:flex md:max-w-md">
 	<!-- Image card -->
 	<div
 		class="bg-surface border-1.5 w-full rounded-3xl border-border p-5 shadow-[0_8px_40px_rgba(147,129,255,0.1)]"

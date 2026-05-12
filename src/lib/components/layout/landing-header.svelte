@@ -1,10 +1,9 @@
 <script lang="ts">
-	import logo from '$lib/assets/logo.png';
 	import { Button } from '$lib/components/ui/button';
 	import ModeToggler from '$lib/components/global/ModeToggler.svelte';
 	import MobileNav from './mobile-nav.svelte';
 	import { Menu } from '@lucide/svelte';
-	import Logo from '../global/Logo.svelte';
+	import AnimatedLogo from '../global/AnimatedLogo.svelte';
 
 	let { isAuthenticated = false }: { isAuthenticated?: boolean } = $props();
 
@@ -27,7 +26,7 @@
 			class="flex items-center gap-2.5 rounded-lg transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 			aria-label="Deskriptia — Beranda"
 		>
-			<Logo size={32} />
+			<AnimatedLogo size={32} />
 			<span class="text-lg font-bold tracking-tight text-foreground">Deskriptia</span>
 		</a>
 
