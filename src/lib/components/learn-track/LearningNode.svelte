@@ -49,7 +49,14 @@
 	const config = $derived(typeConfig[type]);
 
 	function handleClick() {
-		if (!isLocked && onclick) onclick();
+		if (!isLocked) {
+			// Navigate to lesson route for lesson/quiz/challenge/current types
+			if (type === 'lesson' || type === 'quiz' || type === 'challenge' || type === 'current') {
+				window.location.href = `/lesson/${id}`;
+			} else if (onclick) {
+				onclick();
+			}
+		}
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
