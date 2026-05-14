@@ -5,14 +5,31 @@
 	import XPBadge from '$lib/components/ui/XPBadge.svelte';
 	import AnimatedButton from '$lib/components/ui/AnimatedButton.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { BookOpen, PenLine, Lock, ArrowRight, TrendingUp } from '@lucide/svelte';
+	import { BookOpen, PenLine, Lock, ArrowRight, TrendingUp, Zap, Clock, Play } from '@lucide/svelte';
 	import type { PageData } from './$types';
+	import { progressionStore } from '$lib/stores/progressionStore.svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	// Initialize progression store
+	$effect(() => {
+		if (data.progression) {
+			progressionStore.initialize({
+				totalXP: data.progression.totalXP,
+				level: data.progression.level,
+				currentNodeId: data.progression.continueLearning?.nodeId ?? 'node-1-1',
+				currentTrackId: 'track-1',
+				completedNodeIds: [],
+				lastActivityAt: null
+			});
+		}
+	});
 
 	// Greeting based on time of day
 	const hour = new Date().getHours();
 	const greeting = hour < 12 ? 'Selamat pagi' : hour < 17 ? 'Selamat siang' : 'Selamat malam';
+
+	const prog = $derived(data.progression);
 </script>
 
 <svelte:head>
@@ -20,34 +37,165 @@
 	<meta name="description" content="Dashboard pembelajaran teks deskriptif Deskriptia." />
 </svelte:head>
 
-<div class="dashboard">
+<div class="flex flex-col gap-6">
 	<!-- Page header -->
-	<header class="dash-header">
+	<header class="flex items-start justify-between gap-4">
 		<div>
-			<p class="dash-greeting">{greeting} 👋</p>
-			<h1 class="dash-title">Halo, {data.userName}!</h1>
-			<p class="dash-subtitle">Lanjutkan perjalanan belajarmu hari ini.</p>
+			<p class="mb-0.5 text-sm text-muted-foreground">{greeting} 👋</p>
+			<h1 class="mb-1 text-[1.75rem] leading-tight font-extrabold tracking-tight text-foreground">
+				Halo, {data.userName}!
+			</h1>
+			<p class="text-sm text-muted-foreground">Lanjutkan perjalanan belajarmu hari ini.</p>
 		</div>
-		<XPBadge xp={185} />
+		<XPBadge xp={prog.totalXP} />
 	</header>
 
-	<!-- Quick stats strip -->
-	<div class="stats-strip">
-		<div class="stat-item">
-			<span class="stat-number">7</span>
-			<span class="stat-desc">🔥 Hari Streak</span>
+	<!-- Level & XP progress card -->
+	<div
+		class="relative overflow-hidden rounded-2xl border border-border bg-(--surface) p-5 shadow-[0_4px_16px_rgba(147,129,255,0.07)]"
+	>
+		<!-- Level badge -->
+		<div class="mb-3 flex items-center justify-between gap-3">
+			<div class="flex items-center gap-2.5">
+				<div
+					class="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-primary to-[#b3a3ff] text-sm font-extrabold text-white shadow-[0_4px_12px_rgba(147,129,255,0.35)]"
+				>
+					{prog.level}
+				</div>
+				<div class="flex flex-col">
+					<span class="text-sm font-bold text-foreground">Level {prog.level}</span>
+					<span class="text-xs font-medium text-muted-foreground">{prog.levelTitle}</span>
+				</div>
+			</div>
+			<div
+				class="inline-flex items-center gap-1 rounded-full border border-[#fbbf24] bg-linear-to-br from-[#fef3c7] to-[#fde68a] px-2.5 py-1 text-xs font-bold text-[#d97706]"
+			>
+				<Zap size={12} />
+				{prog.totalXP} XP
+			</div>
 		</div>
-		<div class="stat-divider" aria-hidden="true"></div>
-		<div class="stat-item">
-			<span class="stat-number">2</span>
-			<span class="stat-desc">📚 Materi Selesai</span>
+
+		<!-- Level progress bar -->
+		<div class="mb-2">
+			<div class="h-2 overflow-hidden rounded-full bg-muted">
+				<div
+					class="relative h-full overflow-hidden rounded-full bg-linear-to-r from-primary to-[#b3a3ff] transition-[width] duration-700 ease-out"
+					style:width="{prog.xpProgress.progressPercentage}%"
+				>
+					<div
+						class="absolute inset-0 animate-[shimmer_2.5s_ease-in-out_infinite] bg-linear-to-r from-transparent via-white/35 to-transparent"
+					></div>
+				</div>
+			</div>
 		</div>
-		<div class="stat-divider" aria-hidden="true"></div>
-		<div class="stat-item">
-			<span class="stat-number">8</span>
-			<span class="stat-desc">✍️ Latihan</span>
+		<div class="flex justify-between text-[0.68rem] text-muted-foreground">
+			<span>{prog.xpProgress.currentLevelXP} XP</span>
+			<span>{prog.xpProgress.nextLevelXP} XP</span>
 		</div>
 	</div>
+
+	<!-- Quick stats strip -->
+	<div
+		class="flex items-center rounded-2xl border border-border bg-(--surface) px-6 py-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+	>
+		<div class="flex flex-1 flex-col items-center gap-0.5">
+			<span class="text-2xl font-extrabold tracking-tight text-foreground">{prog.completedCount}</span>
+			<span class="text-xs text-muted-foreground">✅ Selesai</span>
+		</div>
+		<div class="mx-3 h-10 w-px bg-border" aria-hidden="true"></div>
+		<div class="flex flex-1 flex-col items-center gap-0.5">
+			<span class="text-2xl font-extrabold tracking-tight text-foreground">{prog.totalNodes}</span>
+			<span class="text-xs text-muted-foreground">📚 Total Materi</span>
+		</div>
+		<div class="mx-3 h-10 w-px bg-border" aria-hidden="true"></div>
+		<div class="flex flex-1 flex-col items-center gap-0.5">
+			<span class="text-2xl font-extrabold tracking-tight text-foreground">{prog.trackProgress}%</span>
+			<span class="text-xs text-muted-foreground">📈 Progres</span>
+		</div>
+	</div>
+
+	<!-- Continue Learning -->
+	{#if prog.continueLearning}
+		<section aria-labelledby="continue-heading">
+			<SectionTitle
+				title="Lanjutkan Belajar"
+				subtitle="Mulai dari tempat terakhirmu."
+			/>
+
+			<a
+				href="/lesson/{prog.continueLearning.nodeId}"
+				class="group block rounded-2xl border-[1.5px] border-[color-mix(in_srgb,var(--primary)_30%,var(--border))] bg-[color-mix(in_srgb,var(--primary)_3%,var(--surface))] p-5 shadow-[0_4px_20px_rgba(147,129,255,0.1)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(147,129,255,0.18)] hover:border-[color-mix(in_srgb,var(--primary)_45%,var(--border))]"
+			>
+				<div class="mb-3 flex items-center gap-2">
+					<div
+						class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-[0_3px_10px_rgba(147,129,255,0.35)]"
+					>
+						<Play size={14} />
+					</div>
+					<div
+						class="rounded-full bg-[color-mix(in_srgb,var(--primary)_12%,transparent)] px-2.5 py-0.5 text-[0.68rem] font-semibold tracking-wider text-primary uppercase"
+					>
+						{prog.continueLearning.chapterTitle}
+					</div>
+				</div>
+
+				<h3 class="mb-1.5 text-base font-bold text-foreground">
+					{prog.continueLearning.title}
+				</h3>
+
+				<div class="flex items-center gap-3">
+					<span class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
+						<Clock size={12} />
+						{prog.continueLearning.duration} mnt
+					</span>
+					<span
+						class="inline-flex items-center gap-1 rounded-full border border-[#fbbf24] bg-linear-to-br from-[#fef3c7] to-[#fde68a] px-2 py-0.5 text-xs font-bold text-[#d97706]"
+					>
+						<Zap size={11} />
+						+{prog.continueLearning.xp} XP
+					</span>
+					<span
+						class="ml-auto inline-flex items-center gap-0.5 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+					>
+						Lanjutkan
+						<ArrowRight size={13} />
+					</span>
+				</div>
+			</a>
+		</section>
+	{/if}
+
+	<!-- Track progress -->
+	<section aria-labelledby="track-heading">
+		<SectionTitle
+			title="Track Belajar"
+			subtitle="Lihat progres jalur belajarmu."
+		/>
+
+		<a
+			href="/learn"
+			class="group flex items-center justify-between rounded-2xl border border-border bg-(--surface) p-5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(147,129,255,0.1)] hover:border-[color-mix(in_srgb,var(--primary)_25%,var(--border))]"
+		>
+			<div class="flex items-center gap-4">
+				<div
+					class="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-[#6c55d9] via-[#9381ff] to-[#b3a3ff] text-white shadow-[0_4px_14px_rgba(147,129,255,0.35)]"
+				>
+					<BookOpen size={22} />
+				</div>
+				<div class="flex flex-col gap-0.5">
+					<span class="text-sm font-bold text-foreground">Track 1 — Teks Deskripsi Dasar</span>
+					<span class="text-xs text-muted-foreground">
+						{prog.completedCount}/{prog.totalNodes} pelajaran · {prog.trackProgress}% selesai
+					</span>
+				</div>
+			</div>
+			<div
+				class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-white"
+			>
+				<ArrowRight size={16} />
+			</div>
+		</a>
+	</section>
 
 	<!-- Materials section -->
 	<section aria-labelledby="materials-heading">
@@ -56,32 +204,41 @@
 			subtitle="Ikuti urutan materi untuk hasil terbaik."
 		/>
 
-		<div class="materials-grid">
+		<div class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
 			{#each data.materials as material}
-				<AppCard variant={material.isLocked ? 'default' : 'interactive'} class="material-card {material.isLocked ? 'material-card--locked' : ''}">
-					<div class="material-card__header">
-						<div class="material-icon" aria-hidden="true">
+				<AppCard variant={material.isLocked ? 'default' : 'interactive'} class="flex flex-col gap-3 {material.isLocked ? 'opacity-65' : ''}">
+					<div class="flex items-center justify-between">
+						<div
+							class="flex h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-primary-soft text-primary"
+							aria-hidden="true"
+						>
 							{#if material.isLocked}
 								<Lock size={18} />
 							{:else}
 								<BookOpen size={18} />
 							{/if}
 						</div>
-						<span class="material-status" class:status-open={!material.isLocked} class:status-locked={material.isLocked}>
+						<span
+							class="rounded-full px-2.5 py-0.5 text-[0.72rem] font-semibold"
+							class:bg-[color-mix(in_srgb,var(--success)_15%,transparent)]={!material.isLocked}
+							class:text-[#065f46]={!material.isLocked}
+							class:bg-[color-mix(in_srgb,#718096_12%,transparent)]={material.isLocked}
+							class:text-[#718096]={material.isLocked}
+						>
 							{material.isLocked ? 'Terkunci' : (material.isQuizPassed ? 'Selesai' : 'Tersedia')}
 						</span>
 					</div>
 
-					<h2 class="material-title">{material.title}</h2>
+					<h2 class="m-0 text-[0.95rem] leading-snug font-bold text-foreground">{material.title}</h2>
 
 					{#if !material.isLocked}
-						<div class="material-score">
+						<div class="mt-1">
 							<ProgressBar value={material.score} max={100} showLabel label="Skor Quiz" />
 						</div>
 					{/if}
 
-					<div class="material-actions">
-						<a href={material.isLocked ? undefined : `/materi/${material.slug}`} class:pointer-none={material.isLocked}>
+					<div class="mt-auto flex flex-wrap gap-2">
+						<a href={material.isLocked ? undefined : `/materi/${material.slug}`} class:pointer-events-none={material.isLocked}>
 							<Button disabled={material.isLocked} size="sm">
 								Buka Materi
 							</Button>
@@ -103,25 +260,27 @@
 		<SectionTitle title="Draf Kamu" subtitle="Lanjutkan tulisan yang belum selesai." />
 
 		{#if data.drafts.length === 0}
-			<AppCard variant="default" class="empty-state">
-				<div class="empty-content">
-					<span class="empty-icon" aria-hidden="true">📝</span>
-					<p class="empty-text">Belum ada draf. Mulai latihan menulis dari materi di atas!</p>
+			<AppCard variant="default" class="text-center">
+				<div class="flex flex-col items-center gap-3 px-4 py-6">
+					<span class="text-[2.5rem]" aria-hidden="true">📝</span>
+					<p class="m-0 max-w-[280px] text-sm leading-relaxed text-muted-foreground">
+						Belum ada draf. Mulai latihan menulis dari materi di atas!
+					</p>
 				</div>
 			</AppCard>
 		{:else}
-			<div class="drafts-grid">
+			<div class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
 				{#each data.drafts as draft}
-					<AppCard variant="interactive" class="draft-card">
-						<div class="draft-header">
-							<PenLine size={16} class="draft-icon" aria-hidden="true" />
-							<span class="draft-updated">
+					<AppCard variant="interactive" class="flex flex-col gap-2">
+						<div class="flex items-center justify-between">
+							<PenLine size={16} class="text-primary" aria-hidden="true" />
+							<span class="text-[0.72rem] text-muted-foreground">
 								{new Date(draft.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
 							</span>
 						</div>
-						<h3 class="draft-title">{draft.title}</h3>
-						<a href={`/latihan-baca/${draft.id}`} class="draft-link">
-							<Button variant="secondary" size="sm" class="draft-btn">
+						<h3 class="m-0 flex-1 text-sm font-semibold text-foreground">{draft.title}</h3>
+						<a href={`/latihan-baca/${draft.id}`} class="mt-auto">
+							<Button variant="secondary" size="sm" class="w-full justify-center">
 								Lanjutkan
 								<ArrowRight size={14} />
 							</Button>
@@ -132,225 +291,3 @@
 		{/if}
 	</section>
 </div>
-
-<style>
-	.dashboard {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	/* Header */
-	.dash-header {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1rem;
-	}
-
-	.dash-greeting {
-		font-size: 0.85rem;
-		color: #718096;
-		margin: 0 0 0.15rem;
-	}
-
-	.dash-title {
-		font-size: 1.75rem;
-		font-weight: 800;
-		color: var(--text);
-		margin: 0 0 0.25rem;
-		letter-spacing: -0.03em;
-		line-height: 1.2;
-	}
-
-	.dash-subtitle {
-		font-size: 0.875rem;
-		color: #718096;
-		margin: 0;
-	}
-
-	/* Stats strip */
-	.stats-strip {
-		display: flex;
-		align-items: center;
-		gap: 0;
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 16px;
-		padding: 1rem 1.5rem;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-	}
-
-	.stat-item {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.2rem;
-	}
-
-	.stat-number {
-		font-size: 1.5rem;
-		font-weight: 800;
-		color: var(--text);
-		letter-spacing: -0.03em;
-		line-height: 1;
-	}
-
-	.stat-desc {
-		font-size: 0.75rem;
-		color: #718096;
-		text-align: center;
-	}
-
-	.stat-divider {
-		width: 1px;
-		height: 40px;
-		background: var(--border);
-		flex-shrink: 0;
-	}
-
-	/* Materials grid */
-	.materials-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: 1rem;
-	}
-
-	:global(.material-card) {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	:global(.material-card--locked) {
-		opacity: 0.65;
-	}
-
-	.material-card__header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.material-icon {
-		width: 34px;
-		height: 34px;
-		border-radius: 10px;
-		background: var(--primary-soft);
-		color: var(--primary);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.material-status {
-		font-size: 0.72rem;
-		font-weight: 600;
-		padding: 0.2rem 0.6rem;
-		border-radius: 99px;
-	}
-
-	.status-open {
-		background: color-mix(in srgb, var(--success) 15%, transparent);
-		color: #065f46;
-	}
-
-	.status-locked {
-		background: color-mix(in srgb, #718096 12%, transparent);
-		color: #718096;
-	}
-
-	.material-title {
-		font-size: 0.95rem;
-		font-weight: 700;
-		color: var(--text);
-		margin: 0;
-		line-height: 1.4;
-	}
-
-	.material-score {
-		margin-top: 0.25rem;
-	}
-
-	.material-actions {
-		display: flex;
-		gap: 0.5rem;
-		flex-wrap: wrap;
-		margin-top: auto;
-	}
-
-	.pointer-none {
-		pointer-events: none;
-	}
-
-	/* Drafts */
-	.drafts-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-		gap: 1rem;
-	}
-
-	:global(.draft-card) {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.draft-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	:global(.draft-icon) {
-		color: var(--primary);
-	}
-
-	.draft-updated {
-		font-size: 0.72rem;
-		color: #718096;
-	}
-
-	.draft-title {
-		font-size: 0.9rem;
-		font-weight: 600;
-		color: var(--text);
-		margin: 0;
-		flex: 1;
-	}
-
-	:global(.draft-btn) {
-		width: 100%;
-		justify-content: center;
-	}
-
-	.draft-link {
-		margin-top: auto;
-	}
-
-	/* Empty state */
-	:global(.empty-state) {
-		text-align: center;
-	}
-
-	.empty-content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 1.5rem 1rem;
-	}
-
-	.empty-icon {
-		font-size: 2.5rem;
-	}
-
-	.empty-text {
-		font-size: 0.875rem;
-		color: #718096;
-		margin: 0;
-		max-width: 280px;
-		line-height: 1.5;
-	}
-</style>

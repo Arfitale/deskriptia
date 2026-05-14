@@ -4,6 +4,9 @@ import { db } from '$lib/server/db';
 import { drafts, materials, userProgress } from '$lib/server/db/schema';
 import { and, desc, eq } from 'drizzle-orm';
 import { enforceOnboardingGuard } from '$lib/server/guards/onboarding';
+import { getUserProgression, buildDynamicTrack } from '$lib/server/progression';
+import { getXPForNextLevel, getLevelTitle } from '$lib/utils/xp';
+import { learnTrack } from '$lib/data/learnTrack';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event;
@@ -31,6 +34,21 @@ export const load: PageServerLoad = async (event) => {
 		.where(eq(drafts.userId, locals.user.id))
 		.orderBy(desc(drafts.updatedAt));
 
+	// Get user progression data
+	const progression = await getUserProgression(locals.user.id);
+	const xpProgress = getXPForNextLevel(progression.totalXP);
+	const levelTitle = getLevelTitle(progression.level);
+
+	// Find current lesson info for "Continue Learning"
+	const currentNode = findNodeById(progression.currentNodeId);
+	const currentChapter = findChapterForNode(progression.currentNodeId);
+
+	// Calculate track progress percentage
+	const allNodes = learnTrack.chapters.flatMap((ch) => ch.nodes);
+	const trackProgress = allNodes.length > 0
+		? Math.round((progression.completedNodeIds.length / allNodes.length) * 100)
+		: 0;
+
 	return {
 		userName: locals.user.name,
 		materials: allMaterials.map((material, index) => {
@@ -48,9 +66,44 @@ export const load: PageServerLoad = async (event) => {
 				isLocked
 			};
 		}),
-		drafts: userDrafts
+		drafts: userDrafts,
+		progression: {
+			totalXP: progression.totalXP,
+			level: progression.level,
+			levelTitle,
+			xpProgress,
+			completedCount: progression.completedNodeIds.length,
+			totalNodes: allNodes.length,
+			trackProgress,
+			continueLearning: currentNode
+				? {
+						nodeId: currentNode.id,
+						title: currentNode.title,
+						chapterTitle: currentChapter?.subtitle ?? '',
+						type: currentNode.type,
+						duration: currentNode.duration,
+						xp: currentNode.xp
+					}
+				: null
+		}
 	};
 };
+
+function findNodeById(nodeId: string) {
+	for (const chapter of learnTrack.chapters) {
+		for (const node of chapter.nodes) {
+			if (node.id === nodeId) return node;
+		}
+	}
+	return null;
+}
+
+function findChapterForNode(nodeId: string) {
+	for (const chapter of learnTrack.chapters) {
+		if (chapter.nodes.some((n) => n.id === nodeId)) return chapter;
+	}
+	return null;
+}
 
 export const actions: Actions = {
 	createDraft: async ({ request, locals }) => {

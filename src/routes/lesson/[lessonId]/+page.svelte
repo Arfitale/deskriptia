@@ -6,14 +6,19 @@
 	import InteractionBlock from '$lib/components/lesson/InteractionBlock.svelte';
 	import QuizCard from '$lib/components/lesson/QuizCard.svelte';
 	import CompletionScreen from '$lib/components/lesson/CompletionScreen.svelte';
+	import { progressionStore } from '$lib/stores/progressionStore.svelte';
+	import type { PageData } from './$types';
 
 	// Steps: 0=intro, 1=micro, 2=example, 3=interaction, 4=quiz, 5=completion
 	type Step = 0 | 1 | 2 | 3 | 4 | 5;
 
-	let { data } = $props();
+	let { data }: { data: PageData } = $props();
 	const lesson = data.lesson;
 
 	let step = $state<Step>(0);
+	let completionSaved = $state(false);
+	let earnedXP = $state(0);
+	let leveledUp = $state(false);
 
 	function goNext() {
 		if (step < 5) step = (step + 1) as Step;
@@ -25,6 +30,42 @@
 
 	// Header step = steps 1–5 map to lesson content steps
 	const headerStep = $derived(step === 0 ? 0 : step);
+
+	// Save progress when reaching completion step
+	$effect(() => {
+		if (step === 5 && !completionSaved) {
+			saveCompletion();
+		}
+	});
+
+	async function saveCompletion() {
+		try {
+			const res = await fetch('/api/progress/complete', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ nodeId: lesson.id })
+			});
+
+			if (res.ok) {
+				const result = await res.json();
+				earnedXP = result.xpEarned;
+				leveledUp = result.leveledUp;
+				completionSaved = true;
+
+				// Update local store
+				progressionStore.completeLesson(
+					lesson.id,
+					result.xpEarned,
+					result.nextNodeId
+				);
+			}
+		} catch (err) {
+			console.error('Failed to save lesson completion:', err);
+			// Still show completion — will sync on next load
+			completionSaved = true;
+			earnedXP = lesson.xpReward;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -102,9 +143,10 @@
 	{:else if step === 5}
 		<CompletionScreen
 			lessonTitle={lesson.title}
-			xpEarned={lesson.xpReward}
+			xpEarned={earnedXP || lesson.xpReward}
 			nextLesson={lesson.nextLesson}
 			onrestart={restartLesson}
+			{leveledUp}
 		/>
 	{/if}
 </LessonLayout>

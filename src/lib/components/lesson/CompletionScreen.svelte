@@ -1,28 +1,33 @@
 <script lang="ts">
-	import { Zap, ArrowRight, Star, RotateCcw } from '@lucide/svelte';
+	import { Zap, ArrowRight, Star, RotateCcw, TrendingUp } from '@lucide/svelte';
+	import { progressionStore } from '$lib/stores/progressionStore.svelte';
 
 	let {
 		lessonTitle,
 		xpEarned,
 		nextLesson,
-		onrestart
+		onrestart,
+		leveledUp = false
 	}: {
 		lessonTitle: string;
 		xpEarned: number;
 		nextLesson?: { id: string; title: string };
 		onrestart?: () => void;
+		leveledUp?: boolean;
 	} = $props();
 
-	// Staggered reveal with Svelte's onMount approach via CSS delays
+	// Staggered reveal
 	let visible = $state(false);
 
 	$effect(() => {
-		// Small delay for dramatic effect
 		const t = setTimeout(() => (visible = true), 80);
 		return () => clearTimeout(t);
 	});
 
 	const celebrationEmojis = ['🌟', '✨', '💫', '🎊', '🌈'];
+
+	// Derive progression info from store
+	const prog = $derived(progressionStore.state);
 </script>
 
 <div class="completion-wrapper" class:visible>
@@ -52,6 +57,32 @@
 			<span class="xp-label">XP diperoleh</span>
 		</div>
 
+		<!-- Level progress bar -->
+		<div class="level-section">
+			<div class="level-header">
+				<span class="level-label">Level {prog.level}</span>
+				<span class="level-title">{prog.levelTitle}</span>
+			</div>
+			<div class="level-bar-track">
+				<div
+					class="level-bar-fill"
+					style:width="{prog.xpProgress.progressPercentage}%"
+				></div>
+			</div>
+			<div class="level-xp-info">
+				<span>{prog.totalXP} XP</span>
+				<span>{prog.xpProgress.nextLevelXP} XP</span>
+			</div>
+		</div>
+
+		<!-- Level up celebration -->
+		{#if leveledUp}
+			<div class="level-up-badge">
+				<TrendingUp size={16} />
+				<span>Naik ke Level {prog.level}! 🎊</span>
+			</div>
+		{/if}
+
 		<!-- Stars -->
 		<div class="stars" aria-label="Pencapaian bintang">
 			{#each [0, 1, 2] as i}
@@ -63,12 +94,6 @@
 					color="#f59e0b"
 				/>
 			{/each}
-		</div>
-
-		<!-- Achievement pill -->
-		<div class="achievement">
-			<span class="achievement-icon">🏅</span>
-			<span>Penguasa Struktur Teks Deskripsi</span>
 		</div>
 
 		<!-- CTA buttons -->
@@ -243,6 +268,89 @@
 		color: #92400e;
 	}
 
+	/* Level section */
+	.level-section {
+		width: 100%;
+		max-width: 320px;
+		animation: fadeUp 0.4s ease 0.33s both;
+	}
+
+	.level-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+
+	.level-label {
+		font-size: 0.78rem;
+		font-weight: 800;
+		color: var(--primary);
+	}
+
+	.level-title {
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: var(--muted-foreground);
+	}
+
+	.level-bar-track {
+		height: 8px;
+		background: var(--muted);
+		border-radius: 999px;
+		overflow: hidden;
+	}
+
+	.level-bar-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--primary), #b3a3ff);
+		border-radius: 999px;
+		transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+		position: relative;
+	}
+
+	.level-bar-fill::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+		animation: shimmer 2.5s ease-in-out infinite;
+	}
+
+	@keyframes shimmer {
+		0% { transform: translateX(-100%); }
+		60%, 100% { transform: translateX(200%); }
+	}
+
+	.level-xp-info {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 0.35rem;
+		font-size: 0.68rem;
+		color: var(--muted-foreground);
+		font-weight: 500;
+	}
+
+	/* Level up badge */
+	.level-up-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: linear-gradient(135deg, #f1eeff, #e8e2ff);
+		border: 1.5px solid color-mix(in srgb, var(--primary) 30%, transparent);
+		border-radius: 999px;
+		padding: 0.5rem 1.25rem;
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--primary);
+		animation: levelUpPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+	}
+
+	@keyframes levelUpPop {
+		from { transform: scale(0.5); opacity: 0; }
+		to { transform: scale(1); opacity: 1; }
+	}
+
 	/* Stars */
 	.stars {
 		display: flex;
@@ -257,25 +365,6 @@
 	@keyframes starPop {
 		from { transform: scale(0) rotate(-30deg); opacity: 0; }
 		to { transform: scale(1) rotate(0deg); opacity: 1; }
-	}
-
-	/* Achievement */
-	.achievement {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		background: var(--primary-soft);
-		border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
-		border-radius: 999px;
-		padding: 0.4rem 1rem;
-		font-size: 0.8rem;
-		font-weight: 600;
-		color: var(--primary);
-		animation: fadeUp 0.4s ease 0.42s both;
-	}
-
-	.achievement-icon {
-		font-size: 1rem;
 	}
 
 	/* CTA */
