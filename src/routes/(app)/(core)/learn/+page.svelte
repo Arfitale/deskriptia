@@ -5,8 +5,28 @@
 	import LearningNode from '$lib/components/learn-track/LearningNode.svelte';
 	import NodeConnector from '$lib/components/learn-track/NodeConnector.svelte';
 	import CompletionModal from '$lib/components/learn-track/CompletionModal.svelte';
-	import { learnTrack } from '$lib/data/learnTrack';
 	import type { LearningNode as LearningNodeType } from '$lib/data/learnTrack';
+	import { progressionStore } from '$lib/stores/progressionStore.svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
+	// Initialize progression store from server data
+	$effect(() => {
+		progressionStore.initialize({
+			totalXP: data.progression.totalXP,
+			level: data.progression.level,
+			currentNodeId: data.progression.currentNodeId,
+			currentTrackId: data.progression.currentTrackId,
+			completedNodeIds: data.progression.completedNodeIds,
+			lastActivityAt: data.progression.lastActivityAt
+				? new Date(data.progression.lastActivityAt)
+				: null
+		});
+	});
+
+	// Use server-provided dynamic track data
+	const track = $derived(data.track);
 
 	// Modal state
 	let showModal = $state(false);
@@ -18,8 +38,9 @@
 
 		if (node.state === 'current') {
 			// Simulate completing the current node → show modal
-			const chapter = learnTrack.chapters[chapterIdx];
-			const nextNode = chapter.nodes[nodeIdx + 1] ?? learnTrack.chapters[chapterIdx + 1]?.nodes[0];
+			const chapter = track.chapters[chapterIdx];
+			const nextNode =
+				chapter.nodes[nodeIdx + 1] ?? track.chapters[chapterIdx + 1]?.nodes[0];
 			completedNode = node;
 			nextNodeTitle = nextNode?.title ?? '';
 			showModal = true;
@@ -44,26 +65,26 @@
 <div class="mx-auto flex w-full max-w-[640px] flex-col gap-6">
 	<!-- TrackHeader -->
 	<TrackHeader
-		title={learnTrack.title}
-		subtitle={learnTrack.subtitle}
-		description={learnTrack.description}
-		totalXP={learnTrack.totalXP}
-		earnedXP={learnTrack.earnedXP}
-		completedLessons={learnTrack.completedLessons}
-		totalLessons={learnTrack.totalLessons}
+		title={track.title}
+		subtitle={track.subtitle}
+		description={track.description}
+		totalXP={track.totalXP}
+		earnedXP={track.earnedXP}
+		completedLessons={track.completedLessons}
+		totalLessons={track.totalLessons}
 	/>
 
 	<!-- TrackProgressBar -->
 	<TrackProgressBar
-		completed={learnTrack.completedLessons}
-		total={learnTrack.totalLessons}
-		earnedXP={learnTrack.earnedXP}
-		totalXP={learnTrack.totalXP}
+		completed={track.completedLessons}
+		total={track.totalLessons}
+		earnedXP={track.earnedXP}
+		totalXP={track.totalXP}
 	/>
 
 	<!-- roadmap -->
 	<div class="flex flex-col">
-		{#each learnTrack.chapters as chapter, chapterIdx (chapterIdx)}
+		{#each track.chapters as chapter, chapterIdx (chapterIdx)}
 			<!-- chapter-divider -->
 			{#if chapterIdx > 0}
 				<div class="my-6 flex items-center gap-3 pl-[19px]" aria-hidden="true">

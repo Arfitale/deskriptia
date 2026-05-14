@@ -58,3 +58,4 @@ export const drafts = pgTable('drafts', {
 });
 
 export * from './auth.schema';
+export * from './progression.schema';
