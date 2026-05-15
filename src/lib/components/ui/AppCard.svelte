@@ -17,58 +17,32 @@
 	} = $props();
 
 	const variantClasses: Record<Variant, string> = {
-		default: 'app-card--default',
-		elevated: 'app-card--elevated',
-		interactive: 'app-card--interactive'
+		default: 'shadow-[0_1px_3px_rgba(0,0,0,0.04)]',
+		elevated: 'shadow-[0_4px_16px_rgba(147,129,255,0.1)]',
+		interactive: 'cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(147,129,255,0.15)] hover:-translate-y-0.5 hover:border-primary/30 active:translate-y-0 active:shadow-[0_2px_8px_rgba(147,129,255,0.1)]'
 	};
 </script>
 
 {#if onclick}
-	<button type="button" class={cn('app-card', variantClasses[variant], className)} {onclick}>
+	<button 
+		type="button" 
+		class={cn(
+			'w-full rounded-2xl border border-border bg-card p-5 text-left font-sans transition-all duration-200', 
+			variantClasses[variant], 
+			className
+		)} 
+		{onclick}
+	>
 		{@render children()}
 	</button>
 {:else}
-	<div class={cn('app-card', variantClasses[variant], className)}>
+	<div 
+		class={cn(
+			'w-full rounded-2xl border border-border bg-card p-5 text-left font-sans transition-all duration-200', 
+			variantClasses[variant], 
+			className
+		)}
+	>
 		{@render children()}
 	</div>
 {/if}
-
-<style>
-	:global(.app-card) {
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 16px;
-		padding: 1.25rem;
-		text-align: left;
-		width: 100%;
-		font-family: inherit;
-		transition:
-			box-shadow 0.2s ease,
-			transform 0.18s ease,
-			border-color 0.18s ease;
-	}
-
-	:global(.app-card--default) {
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-	}
-
-	:global(.app-card--elevated) {
-		box-shadow: 0 4px 16px rgba(147, 129, 255, 0.1);
-	}
-
-	:global(.app-card--interactive) {
-		cursor: pointer;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-	}
-
-	:global(.app-card--interactive:hover) {
-		box-shadow: 0 8px 24px rgba(147, 129, 255, 0.15);
-		transform: translateY(-2px);
-		border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
-	}
-
-	:global(.app-card--interactive:active) {
-		transform: translateY(0);
-		box-shadow: 0 2px 8px rgba(147, 129, 255, 0.1);
-	}
-</style>

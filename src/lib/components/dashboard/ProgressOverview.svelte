@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Zap, CircleCheck, Flame, Trophy } from '@lucide/svelte';
+	import StatCard from '$lib/components/ui/StatCard.svelte';
 
 	let {
 		totalXP,
@@ -18,14 +19,12 @@
 
 <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both" style="animation-delay: 200ms;">
 	{#each stats as stat}
-		<div class="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-4 transition-all duration-300 hover:border-border hover:shadow-sm">
-			<div class="flex h-10 w-10 items-center justify-center rounded-xl {stat.bg}">
-				<stat.icon size={20} class={stat.color} />
-			</div>
-			<div>
-				<div class="text-2xl font-bold tracking-tight text-foreground">{stat.value}</div>
-				<div class="text-xs font-medium text-muted-foreground">{stat.label}</div>
-			</div>
-		</div>
+		<StatCard 
+			label={stat.label}
+			value={stat.value}
+			icon={stat.icon}
+			colorClass={stat.color}
+			bgClass={stat.bg}
+		/>
 	{/each}
 </div>

@@ -4,7 +4,8 @@
 	import RandomPracticeCard from '$lib/components/practice/RandomPracticeCard.svelte';
 	import RetryIncorrectCard from '$lib/components/practice/RetryIncorrectCard.svelte';
 	import RecentLearningActivity from '$lib/components/dashboard/RecentLearningActivity.svelte';
-	import SectionTitle from '$lib/components/ui/SectionTitle.svelte';
+	import ContentSection from '$lib/components/ui/ContentSection.svelte';
+	import PageContainer from '$lib/components/ui/PageContainer.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -15,7 +16,7 @@
 	<meta name="description" content="Latih kemampuan menulis teks deskriptif kamu." />
 </svelte:head>
 
-<div class="mx-auto flex max-w-4xl flex-col gap-10 pb-12">
+<PageContainer>
 	<PracticeHeader 
 		title="Practice" 
 		description="Latih kembali pemahamanmu melalui latihan ringan dan cepat tanpa tekanan."
@@ -31,17 +32,15 @@
 		</div>
 
 		<!-- Main Categories -->
-		<section aria-label="Kategori Latihan" class="mt-2">
-			<SectionTitle title="Kategori Latihan" subtitle="Pilih topik spesifik yang ingin kamu perdalam." />
+		<ContentSection title="Kategori Latihan" subtitle="Pilih topik spesifik yang ingin kamu perdalam." class="mt-2">
 			<PracticeCategoryGrid />
-		</section>
+		</ContentSection>
 
 		<!-- Recent Practice Activity -->
-		<section aria-label="Riwayat Latihan" class="mt-4">
-			<SectionTitle title="Riwayat Latihan" subtitle="Aktivitas latihan terbarumu." />
+		<ContentSection title="Riwayat Latihan" subtitle="Aktivitas latihan terbarumu." class="mt-4">
 			<div class="max-w-xl">
 				<RecentLearningActivity activities={data.recentPractice} />
 			</div>
-		</section>
+		</ContentSection>
 	</div>
-</div>
+</PageContainer>

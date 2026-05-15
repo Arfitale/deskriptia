@@ -6,6 +6,9 @@
 	import RecentAchievement from '$lib/components/dashboard/RecentAchievement.svelte';
 	import QuickActions from '$lib/components/dashboard/QuickActions.svelte';
 	import RecentLearningActivity from '$lib/components/dashboard/RecentLearningActivity.svelte';
+	import EmptyState from '$lib/components/ui/EmptyState.svelte';
+	import PageContainer from '$lib/components/ui/PageContainer.svelte';
+	import ContentSection from '$lib/components/ui/ContentSection.svelte';
 	
 	import type { PageData } from './$types';
 	import { progressionStore } from '$lib/stores/progressionStore.svelte';
@@ -41,7 +44,7 @@
 	<meta name="description" content="Dashboard pembelajaran teks deskriptif Deskriptia." />
 </svelte:head>
 
-<div class="mx-auto flex max-w-5xl flex-col gap-8 pb-12">
+<PageContainer maxWidth="max-w-5xl">
 	<!-- Header -->
 	<WelcomeHeader 
 		userName={data.userName}
@@ -55,7 +58,7 @@
 		<div class="flex flex-col gap-6 lg:col-span-2 lg:gap-8">
 			<!-- Most Important Component -->
 			{#if prog.continueLearning}
-				<section aria-label="Lanjutkan Belajar">
+				<ContentSection ariaLabel="Lanjutkan Belajar">
 					<ContinueLearningCard 
 						currentNodeId={prog.continueLearning.nodeId}
 						chapterTitle={prog.continueLearning.chapterTitle}
@@ -64,49 +67,50 @@
 						xp={prog.continueLearning.xp}
 						progressPercentage={prog.trackProgress}
 					/>
-				</section>
+				</ContentSection>
 			{:else}
 				<!-- Empty state when all is finished -->
-				<div class="rounded-3xl border border-border bg-card p-8 text-center animate-in fade-in zoom-in-95 duration-500 ease-out">
-					<h2 class="text-xl font-bold">Kamu sudah menyelesaikan semua materi! 🎉</h2>
-					<p class="mt-2 text-muted-foreground">Ulangi pelajaran atau lakukan latihan menulis.</p>
-				</div>
+				<EmptyState 
+					variant="card"
+					title="Kamu sudah menyelesaikan semua materi! 🎉"
+					description="Ulangi pelajaran atau lakukan latihan menulis."
+				/>
 			{/if}
 
-			<section aria-label="Ringkasan Progres">
+			<ContentSection ariaLabel="Ringkasan Progres">
 				<ProgressOverview 
 					totalXP={prog.totalXP}
 					completedCount={prog.completedCount}
 					streak={1}
 					completedChapters={Math.floor(prog.completedCount / 3)}
 				/>
-			</section>
+			</ContentSection>
 
-			<section aria-label="Pencapaian Terakhir">
+			<ContentSection ariaLabel="Pencapaian Terakhir">
 				<RecentAchievement 
 					title="Level {prog.level} Dicapai!" 
 					description="Kamu baru saja naik level. Terus semangat!"
 				/>
-			</section>
+			</ContentSection>
 		</div>
 
 		<!-- Right Column: Sidebar (takes up 1 column on lg) -->
 		<div class="flex flex-col gap-6 lg:gap-8">
-			<section aria-label="Aksi Cepat">
+			<ContentSection ariaLabel="Aksi Cepat">
 				<QuickActions continueUrl={prog.continueLearning ? `/lesson/${prog.continueLearning.nodeId}` : '/learn'} />
-			</section>
+			</ContentSection>
 
-			<section aria-label="Progres Track">
+			<ContentSection ariaLabel="Progres Track">
 				<CurrentTrackProgress 
 					trackProgress={prog.trackProgress}
 					completedCount={prog.completedCount}
 					totalNodes={prog.totalNodes}
 				/>
-			</section>
+			</ContentSection>
 
-			<section aria-label="Aktivitas Terakhir">
+			<ContentSection ariaLabel="Aktivitas Terakhir">
 				<RecentLearningActivity activities={prog.completedCount > 0 ? recentActivities : []} />
-			</section>
+			</ContentSection>
 		</div>
 	</div>
-</div>
+</PageContainer>

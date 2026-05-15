@@ -1,80 +1,40 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
+
 	let {
 		value = 0,
 		max = 100,
 		showLabel = false,
 		label = '',
-		color = 'primary'
+		color = 'bg-primary',
+		class: className = ''
 	}: {
 		value?: number;
 		max?: number;
 		showLabel?: boolean;
 		label?: string;
-		color?: 'primary' | 'success' | 'warning';
+		color?: string;
+		class?: string;
 	} = $props();
 
 	const percentage = $derived(Math.min(100, Math.max(0, (value / max) * 100)));
-
-	const colorMap = {
-		primary: 'var(--primary)',
-		success: 'var(--success)',
-		warning: 'var(--warning, #fbbf24)'
-	};
 </script>
 
-<div class="progress-wrap" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} aria-label={label || 'Progress'}>
+<div class={cn("w-full", className)} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} aria-label={label || 'Progress'}>
 	{#if showLabel}
-		<div class="progress-header">
+		<div class="mb-1.5 flex items-center justify-between">
 			{#if label}
-				<span class="progress-label">{label}</span>
+				<span class="text-sm font-medium text-foreground">{label}</span>
 			{/if}
-			<span class="progress-value">{Math.round(percentage)}%</span>
+			<span class="text-xs font-semibold text-muted-foreground">{Math.round(percentage)}%</span>
 		</div>
 	{/if}
-	<div class="progress-track">
+	<div class="h-2.5 w-full overflow-hidden rounded-full bg-muted">
 		<div
-			class="progress-fill"
+			class={cn("relative h-full rounded-full transition-all duration-1000 ease-out", color)}
 			style:width="{percentage}%"
-			style:background={colorMap[color]}
-		></div>
+		>
+			<div class="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
+		</div>
 	</div>
 </div>
-
-<style>
-	.progress-wrap {
-		width: 100%;
-	}
-
-	.progress-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.4rem;
-	}
-
-	.progress-label {
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: var(--text);
-	}
-
-	.progress-value {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #718096;
-	}
-
-	.progress-track {
-		height: 8px;
-		background: var(--border);
-		border-radius: 99px;
-		overflow: hidden;
-	}
-
-	.progress-fill {
-		height: 100%;
-		border-radius: 99px;
-		transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-		background: var(--primary);
-	}
-</style>

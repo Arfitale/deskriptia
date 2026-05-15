@@ -1,117 +1,51 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { LayoutDashboard, BookOpen, PenLine, User } from '@lucide/svelte';
+	import { cn } from '$lib/utils';
 
 	const navItems = [
 		{
-			label: 'Dashboard',
+			label: 'Dasbor',
 			href: '/dashboard',
 			icon: LayoutDashboard
 		},
 		{
-			label: 'Learn',
+			label: 'Belajar',
 			href: '/learn',
 			icon: BookOpen
 		},
 		{
-			label: 'Practice',
+			label: 'Latihan',
 			href: '/practice',
 			icon: PenLine
 		},
 		{
-			label: 'Profile',
+			label: 'Profil',
 			href: '/profile',
 			icon: User
 		}
 	];
 
 	function isActive(href: string): boolean {
-		return $page.url.pathname === href || $page.url.pathname.startsWith(href + '/');
+		return page.url.pathname === href || page.url.pathname.startsWith(href + '/');
 	}
 </script>
 
-<nav class="bottom-nav" aria-label="Mobile navigation">
+<nav class="fixed inset-x-0 bottom-0 z-50 flex items-stretch justify-around border-t border-border bg-card pb-[env(safe-area-inset-bottom,0.25rem)] pt-1 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] md:hidden" aria-label="Mobile navigation">
 	{#each navItems as item (item.label)}
 		{@const active = isActive(item.href)}
 		<a
 			href={item.href}
-			class="bottom-nav-item"
-			class:active
+			class={cn(
+				"group flex flex-1 flex-col items-center justify-center gap-1 p-2 text-[0.65rem] font-medium transition-all duration-200 hover:-translate-y-px hover:text-primary",
+				active ? "text-primary" : "text-muted-foreground"
+			)}
 			aria-current={active ? 'page' : undefined}
 		>
-			<span class="bottom-icon" aria-hidden="true">
-				<item.icon size={22} />
+			<span class={cn("flex items-center justify-center transition-all duration-200", active ? "rounded-[10px] bg-primary/10 px-3 py-1" : "")} aria-hidden="true">
+				<item.icon size={22} class={cn("transition-colors", active ? "text-primary" : "text-muted-foreground group-hover:text-primary")} />
 			</span>
-			<span class="bottom-label">{item.label}</span>
+			<span class="leading-none">{item.label}</span>
 		</a>
 	{/each}
 </nav>
-
-<style>
-	.bottom-nav {
-		display: none;
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		z-index: 50;
-		background: var(--surface);
-		border-top: 1px solid var(--border);
-		padding: 0.25rem 0 env(safe-area-inset-bottom, 0.25rem);
-		box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
-	}
-
-	@media (max-width: 768px) {
-		.bottom-nav {
-			display: flex;
-			justify-content: space-around;
-			align-items: stretch;
-		}
-	}
-
-	.bottom-nav-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 0.2rem;
-		flex: 1;
-		padding: 0.5rem 0.25rem;
-		text-decoration: none;
-		color: #718096;
-		font-size: 0.65rem;
-		font-weight: 500;
-		transition:
-			color 0.18s ease,
-			transform 0.15s ease;
-	}
-
-	.bottom-nav-item:hover {
-		color: var(--primary);
-		transform: translateY(-1px);
-	}
-
-	.bottom-nav-item.active {
-		color: var(--primary);
-	}
-
-	.bottom-nav-item.active .bottom-icon {
-		background: var(--primary-soft);
-		border-radius: 10px;
-		padding: 0.25rem 0.75rem;
-	}
-
-	.bottom-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition:
-			background 0.18s ease,
-			padding 0.18s ease,
-			border-radius 0.18s ease;
-	}
-
-	.bottom-label {
-		line-height: 1;
-	}
-</style>
