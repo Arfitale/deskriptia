@@ -26,7 +26,7 @@
 
 <!-- progress-summary -->
 <div
-	class="rounded-2xl border border-border bg-(--surface) px-6 py-5 shadow-[0_4px_16px_rgba(147,129,255,0.07)]"
+	class="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out rounded-2xl border border-border bg-(--surface) px-6 py-5 shadow-[0_4px_16px_rgba(147,129,255,0.07)]"
 >
 	<!-- header -->
 	<div class="mb-3.5 flex items-start justify-between gap-4">

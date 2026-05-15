@@ -62,7 +62,7 @@
 </svelte:head>
 
 <!-- learn-page -->
-<div class="mx-auto flex w-full max-w-[640px] flex-col gap-6">
+<div class="mx-auto flex w-full max-w-[640px] flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
 	<!-- TrackHeader -->
 	<TrackHeader
 		title={track.title}

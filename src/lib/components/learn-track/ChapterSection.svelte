@@ -22,7 +22,7 @@
 </script>
 
 <section class="flex flex-col">
-	<div class="mb-2.5 flex items-start justify-between gap-4">
+	<div class="mb-2.5 flex items-start justify-between gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
 		<div class="flex-1">
 			<div
 				class="mb-1.5 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[0.7rem] font-bold tracking-widest uppercase"

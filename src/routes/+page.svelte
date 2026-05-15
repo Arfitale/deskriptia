@@ -42,7 +42,7 @@
 		spacing={25}
 	/>
 	<LandingHeader isAuthenticated={data.isAuthenticated} />
-	<main class="relative flex flex-1 items-center overflow-hidden px-6 py-20 md:px-12">
+	<main class="relative flex flex-1 items-center overflow-hidden px-6 py-20 md:px-12 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
 		<div
 			class="relative z-10 mx-auto flex w-full max-w-6xl flex-col-reverse items-center gap-12 md:flex-row md:gap-16"
 		>

@@ -24,7 +24,7 @@
 
 <!-- track-header -->
 <header
-	class="relative flex items-center justify-between gap-6 overflow-hidden rounded-[20px] bg-linear-to-br from-[#6c55d9] via-[#9381ff] to-[#b3a3ff] p-8 shadow-[0_8px_32px_rgba(147,129,255,0.3),0_2px_8px_rgba(147,129,255,0.15)] max-[560px]:p-6"
+	class="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out relative flex items-center justify-between gap-6 overflow-hidden rounded-[20px] bg-linear-to-br from-[#6c55d9] via-[#9381ff] to-[#b3a3ff] p-8 shadow-[0_8px_32px_rgba(147,129,255,0.3),0_2px_8px_rgba(147,129,255,0.15)] max-[560px]:p-6"
 >
 	<!-- bg-orb-1 -->
 	<div

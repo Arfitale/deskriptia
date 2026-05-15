@@ -82,7 +82,7 @@
 	onkeydown={handleKeyDown}
 >
 	<!-- State icon -->
-	<div class="relative flex h-10 w-10 shrink-0 items-center justify-center">
+	<div class="relative flex h-10 w-10 shrink-0 items-center justify-center animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
 		<div
 			class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-[transform,box-shadow] duration-200 ease-out"
 			class:bg-[var(--success)]={isCompleted}

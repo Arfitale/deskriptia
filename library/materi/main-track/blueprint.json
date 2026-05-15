@@ -1,0 +1,51 @@
+{
+  "journey": [
+    {
+      "bab": 1,
+      "judul": "Mengenal Teks Deskripsi",
+      "fokus": [
+        "pengertian",
+        "tujuan",
+        "ciri",
+        "contoh dasar"
+      ]
+    },
+    {
+      "bab": 2,
+      "judul": "Struktur Teks Deskripsi",
+      "fokus": [
+        "identifikasi",
+        "deskripsi bagian",
+        "organisasi teks"
+      ]
+    },
+    {
+      "bab": 3,
+      "judul": "Bahasa Deskriptif",
+      "fokus": [
+        "kata sifat",
+        "frasa",
+        "detail sensorik",
+        "kalimat deskriptif"
+      ]
+    },
+    {
+      "bab": 4,
+      "judul": "Menulis Teks Deskripsi",
+      "fokus": [
+        "observasi objek",
+        "menyusun kerangka",
+        "menulis bertahap"
+      ]
+    },
+    {
+      "bab": 5,
+      "judul": "Final Challenge",
+      "fokus": [
+        "menulis teks lengkap secara mandiri",
+        "evaluasi akhir",
+        "penyelesaian journey"
+      ]
+    }
+  ]
+}

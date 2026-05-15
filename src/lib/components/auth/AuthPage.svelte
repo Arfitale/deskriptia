@@ -24,7 +24,7 @@
 </div>
 
 <!-- Card -->
-<main class="relative z-10 flex min-h-screen items-center justify-center p-4">
+<main class="relative z-10 flex min-h-screen items-center justify-center p-4 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
 	<a
 		href="/"
 		class="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/20 hover:pr-5 sm:top-8 sm:left-8"
